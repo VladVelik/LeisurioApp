@@ -15,6 +15,7 @@ final class MainViewModel: ObservableObject {
             }
         }
     }
+    
     @Published var isDatePickerShown: Bool = false
     @Published var isRestViewShown: Bool = false
     @Published var startTime: Date = Date()
@@ -46,6 +47,10 @@ final class MainViewModel: ObservableObject {
             let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
             try await UserManager.shared.addRestToUser(userId: authDataResult.uid, rest: newRest)
             print("Rest added successfully")
+            
+            NotificationManager.shared.saveNotification(restId: restId, startDate: startDate, endDate: endDate, note: keyword)
+            NotificationManager.shared.scheduleNotification(restId: restId, startDate: startDate, endDate: endDate, note: keyword)
+
             try await getRestsForSelectedDate(userId: authDataResult.uid)
         } catch {
             print("Failed to add rest: \(error)")

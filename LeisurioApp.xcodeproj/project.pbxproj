@@ -42,6 +42,7 @@
 		2404297D2A20D27D0019FBB5 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2404297C2A20D27D0019FBB5 /* UserModel.swift */; };
 		2404297F2A20D2A20019FBB5 /* RestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2404297E2A20D2A20019FBB5 /* RestModel.swift */; };
 		24253ADE2A20D75E00E48764 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 24253ADD2A20D75E00E48764 /* FirebaseAuth */; };
+		24253AE12A20E1BF00E48764 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24253AE02A20E1BF00E48764 /* NotificationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		2404297A2A20CF6C0019FBB5 /* BarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarView.swift; sourceTree = "<group>"; };
 		2404297C2A20D27D0019FBB5 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		2404297E2A20D2A20019FBB5 /* RestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestModel.swift; sourceTree = "<group>"; };
+		24253AE02A20E1BF00E48764 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 		240428E42A1399140019FBB5 /* LeisurioApp */ = {
 			isa = PBXGroup;
 			children = (
+				24253ADF2A20E1A700E48764 /* Notifications */,
 				2404296E2A1FAF780019FBB5 /* FireStore */,
 				2404294F2A1E96ED0019FBB5 /* Core */,
 				240429102A15085E0019FBB5 /* Utilities */,
@@ -266,6 +269,14 @@
 			path = Rest;
 			sourceTree = "<group>";
 		};
+		24253ADF2A20E1A700E48764 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				24253AE02A20E1BF00E48764 /* NotificationManager.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -374,6 +385,7 @@
 				240429052A13F90E0019FBB5 /* AuthenticationManager.swift in Sources */,
 				2404296D2A1FAD010019FBB5 /* ProfileViewModel.swift in Sources */,
 				240429122A1508760019FBB5 /* Utilities.swift in Sources */,
+				24253AE12A20E1BF00E48764 /* NotificationManager.swift in Sources */,
 				240429642A1F9B750019FBB5 /* MainView.swift in Sources */,
 				240429032A13F89F0019FBB5 /* SignInEmailView.swift in Sources */,
 			);
