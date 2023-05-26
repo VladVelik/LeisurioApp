@@ -13,10 +13,10 @@ struct AuthDataResultModel {
     let email: String?
     let photoUrl: String?
     
-    init(_ user: User) {
-        self.uid = user.uid
+    init(_ user: DBUser) {
+        self.uid = user.userId
         self.email = user.email
-        self.photoUrl = user.photoURL?.absoluteString
+        self.photoUrl = user.photoUrl?.description
     }
 }
 
@@ -57,6 +57,14 @@ final class AuthenticationManager {
     
     func signOut() throws {
         try Auth.auth().signOut()
+    }
+    
+    func delete() async throws {
+        guard let user = Auth.auth().currentUser else {
+            throw URLError(.badURL)
+        }
+        
+        try await user.delete()
     }
 }
 
