@@ -15,7 +15,6 @@
 		240428F72A13A1D30019FBB5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 240428F62A13A1D30019FBB5 /* FirebaseAnalytics */; };
 		240428F92A13A1D30019FBB5 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 240428F82A13A1D30019FBB5 /* FirebaseAnalyticsSwift */; };
 		240428FB2A13A1D30019FBB5 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 240428FA2A13A1D30019FBB5 /* FirebaseAnalyticsWithoutAdIdSupport */; };
-		240428FE2A13F7610019FBB5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 240428FD2A13F7610019FBB5 /* FirebaseAuth */; };
 		240429012A13F8650019FBB5 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240429002A13F8650019FBB5 /* AuthenticationView.swift */; };
 		240429032A13F89F0019FBB5 /* SignInEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240429022A13F89F0019FBB5 /* SignInEmailView.swift */; };
 		240429052A13F90E0019FBB5 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240429042A13F90E0019FBB5 /* AuthenticationManager.swift */; };
@@ -42,6 +41,7 @@
 		2404297B2A20CF6C0019FBB5 /* BarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2404297A2A20CF6C0019FBB5 /* BarView.swift */; };
 		2404297D2A20D27D0019FBB5 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2404297C2A20D27D0019FBB5 /* UserModel.swift */; };
 		2404297F2A20D2A20019FBB5 /* RestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2404297E2A20D2A20019FBB5 /* RestModel.swift */; };
+		24253ADE2A20D75E00E48764 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 24253ADD2A20D75E00E48764 /* FirebaseAuth */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,9 +86,9 @@
 				240428FB2A13A1D30019FBB5 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				2404290E2A15038F0019FBB5 /* GoogleSignInSwift in Frameworks */,
 				240428F72A13A1D30019FBB5 /* FirebaseAnalytics in Frameworks */,
-				240428FE2A13F7610019FBB5 /* FirebaseAuth in Frameworks */,
 				2404294C2A1E96790019FBB5 /* FirebaseFirestore in Frameworks */,
 				2404294E2A1E96790019FBB5 /* FirebaseFirestoreSwift in Frameworks */,
+				24253ADE2A20D75E00E48764 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,11 +286,11 @@
 				240428F62A13A1D30019FBB5 /* FirebaseAnalytics */,
 				240428F82A13A1D30019FBB5 /* FirebaseAnalyticsSwift */,
 				240428FA2A13A1D30019FBB5 /* FirebaseAnalyticsWithoutAdIdSupport */,
-				240428FD2A13F7610019FBB5 /* FirebaseAuth */,
 				2404290B2A15038F0019FBB5 /* GoogleSignIn */,
 				2404290D2A15038F0019FBB5 /* GoogleSignInSwift */,
 				2404294B2A1E96790019FBB5 /* FirebaseFirestore */,
 				2404294D2A1E96790019FBB5 /* FirebaseFirestoreSwift */,
+				24253ADD2A20D75E00E48764 /* FirebaseAuth */,
 			);
 			productName = LeisurioApp;
 			productReference = 240428E22A1399140019FBB5 /* LeisurioApp.app */;
@@ -622,11 +622,6 @@
 			package = 240428F52A13A1D30019FBB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAnalyticsWithoutAdIdSupport;
 		};
-		240428FD2A13F7610019FBB5 /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 240428F52A13A1D30019FBB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
-		};
 		2404290B2A15038F0019FBB5 /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2404290A2A15038E0019FBB5 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
@@ -646,6 +641,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 240428F52A13A1D30019FBB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestoreSwift;
+		};
+		24253ADD2A20D75E00E48764 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 240428F52A13A1D30019FBB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
