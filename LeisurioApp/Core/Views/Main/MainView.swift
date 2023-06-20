@@ -91,7 +91,7 @@ extension MainView {
                                     Text(rest.keyword ?? "")
                                         .foregroundColor(.white)
                                         .bold()
-                                    Text("с \(viewModel.timeFormatter.string(from: rest.startDate ?? Date()))")
+                                    Text(" с \(viewModel.timeFormatter.string(from: rest.startDate ?? Date()))")
                                         .foregroundColor(.white)
                                         .bold()
                                     Text("до  \(viewModel.timeFormatter.string(from: rest.endDate ?? Date()))")
@@ -158,4 +158,3 @@ struct RestView: View {
         .padding()
     }
 }
-
