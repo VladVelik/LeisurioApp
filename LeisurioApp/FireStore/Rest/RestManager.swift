@@ -26,4 +26,21 @@ final class RestManager {
     func getRest(restId: String) async throws -> Rest {
         try await userDocument(rest: restId).getDocument(as: Rest.self)
     }
+    
+    func deleteRest(restId: String) async throws {
+        try await restCollection.document(restId).delete()
+
+        // Поиск всех пользователей, у которых этот отдых есть в списке отдыхов
+        let usersSnapshot = try await Firestore.firestore().collection("users")
+            .whereField("rests", arrayContains: restId).getDocuments()
+
+        // Обновление каждого пользователя, удаляя отдых из списка отдыхов
+        for document in usersSnapshot.documents {
+            guard let user = try? document.data(as: DBUser.self) else { continue }
+            var updatedUser = user
+            updatedUser.rests.removeAll { $0 == restId }
+            try Firestore.firestore().collection("users").document(user.userId).setData(from: updatedUser)
+        }
+    }
+
 }

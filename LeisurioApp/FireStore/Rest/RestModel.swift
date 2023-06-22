@@ -12,16 +12,18 @@ struct Rest: Codable, Identifiable {
     let startDate: Date?
     let endDate: Date?
     let keyword: String?
+    let restType: String?
     
     var id: String {
         restId
     }
     
-    init(restId: String, startDate: Date, endDate: Date, keyword: String) {
+    init(restId: String, startDate: Date, endDate: Date, keyword: String, restType: String) {
         self.restId = restId
         self.startDate = startDate
         self.endDate = endDate
         self.keyword = keyword
+        self.restType = restType
     }
     
     enum CodingKeys: String, CodingKey {
@@ -29,6 +31,7 @@ struct Rest: Codable, Identifiable {
         case startDate = "start_date"
         case endDate = "end_date"
         case keyword = "keyword"
+        case restType = "rest_type"
     }
     
     init(from decoder: Decoder) throws {
@@ -37,6 +40,7 @@ struct Rest: Codable, Identifiable {
         self.startDate = try container.decode(Date.self, forKey: .startDate)
         self.endDate = try container.decode(Date.self, forKey: .endDate)
         self.keyword = try container.decode(String.self, forKey: .keyword)
+        self.restType = try container.decode(String.self, forKey: .restType)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -45,5 +49,6 @@ struct Rest: Codable, Identifiable {
         try container.encode(self.startDate, forKey: .startDate)
         try container.encode(self.endDate, forKey: .endDate)
         try container.encode(self.keyword, forKey: .keyword)
+        try container.encode(self.restType, forKey: .restType)
     }
 }

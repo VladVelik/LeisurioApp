@@ -11,9 +11,9 @@ struct MainView: View {
     @StateObject private var viewModel = MainViewModel()
     
     var body: some View {
-        ZStack {
-            VStack {
-                ScrollView {
+        VStack {
+            ZStack {
+                VStack {
                     Button(action: {
                         viewModel.toggleDatePicker()
                     }) {
@@ -43,6 +43,7 @@ struct MainView: View {
                     Spacer()
                     Button("Добавить отдых") {
                         viewModel.toggleRestView()
+                        viewModel.closeDatePicker()
                     }
                     Spacer()
                     updateListOfRests
@@ -52,22 +53,22 @@ struct MainView: View {
                 
                 if viewModel.isRestViewShown {
                     RestView(viewModel: viewModel)
-                        .frame(width: 350, height: 250)
                         .background(Color.white)
                         .cornerRadius(20)
                         .shadow(radius: 20)
-                        .position(x: UIScreen.main.bounds.width / 2, y: 0)
+                        .padding([.leading, .trailing], 20)
+                        .frame(alignment: .center)
                     
                 }
             }
-            .onAppear {
-                Task {
-                    let id = try await viewModel.fetchUserUid()
-                    try await viewModel.getRestsForSelectedDate(userId: id)
-                }
+            Spacer()
+        }
+        .onAppear {
+            Task {
+                let id = try await viewModel.fetchUserUid()
+                try await viewModel.getRestsForSelectedDate(userId: id)
             }
         }
-        
     }
     
     private let dateFormatter: DateFormatter = {
@@ -80,31 +81,31 @@ struct MainView: View {
 extension MainView {
     private var updateListOfRests: some View {
         Section {
-            if !viewModel.restsForSelectedDate.isEmpty {
-                ForEach(viewModel.restsForSelectedDate) { rest in
-                    HStack {
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.green)
-                            .frame(height: 40)
-                            .overlay(
-                                HStack {
+            List {
+                if !viewModel.restsForSelectedDate.isEmpty {
+                    ForEach(viewModel.restsForSelectedDate.sorted(
+                        by: { ($0.startDate ?? Date.distantPast) < ($1.startDate ?? Date.distantPast) })) { rest in
+                            NavigationLink(destination: RestDetailView(rest: rest, timeFormatter: viewModel.timeFormatter)) {
+                                VStack {
                                     Text(rest.keyword ?? "")
-                                        .foregroundColor(.white)
-                                        .bold()
                                     Text(" с \(viewModel.timeFormatter.string(from: rest.startDate ?? Date()))")
-                                        .foregroundColor(.white)
-                                        .bold()
-                                    Text("до  \(viewModel.timeFormatter.string(from: rest.endDate ?? Date()))")
-                                        .foregroundColor(.white)
-                                        .bold()
+                                    Text("до  \(viewModel.timeFormatter.string(from: rest.endDate ?? Date())) ")
+                                    Text(rest.restType ?? "")
                                 }
-                            )
-                    }
-                    .padding(.horizontal)
-                    Spacer()
+                                .bold()
+                                .frame(height: 140)
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .background(Color.green)
+                                .cornerRadius(10)
+                            }
+                        }
+                        .onDelete { item in
+                            viewModel.deleteRest(at: item)
+                        }
+                } else {
+                    Text("Сегодня событий нет")
                 }
-            } else {
-                Text("Сегодня событий нет")
             }
         }
     }
@@ -119,42 +120,83 @@ struct RestView: View {
         return formatter
     }()
     
+    var categories: [(name: String, imageName: String)] = [
+        ("Игры", "gamecontroller.fill"),
+        ("Спорт", "sportscourt.fill"),
+        ("Хобби", "paintpalette.fill"),
+        ("Общение", "message.fill"),
+        ("Прогулки", "figure.walk"),
+        ("Другое", "ellipsis.circle.fill")
+    ]
+    
     var body: some View {
         VStack {
-            Button(action: {
-                viewModel.toggleRestView()
-            }) {
-                Text("Назад")
-            }
-            Spacer()
             Text("Добавить отдых")
                 .font(.headline)
-            
-            DatePicker("Начало отдыха", selection: $viewModel.startTime, displayedComponents: .hourAndMinute)
+            DatePicker("Начало отдыха:", selection: $viewModel.startTime, displayedComponents: .hourAndMinute)
                 .datePickerStyle(DefaultDatePickerStyle())
-            
-            DatePicker("Окончание отдыха", selection: $viewModel.endTime, displayedComponents: .hourAndMinute)
+            DatePicker("Окончание отдыха:", selection: $viewModel.endTime, displayedComponents: .hourAndMinute)
                 .datePickerStyle(DefaultDatePickerStyle())
-            
             TextField("Заметка об отдыхе", text: $viewModel.restNote)
                 .padding()
-            
-            Button("Далее") {
-                let fullStartTime = viewModel.mergeDateAndTime(date: viewModel.selectedDate, time: viewModel.startTime)
-                let fullEndTime = viewModel.mergeDateAndTime(date: viewModel.selectedDate, time: viewModel.endTime)
-                Task {
-                    try await viewModel.addNewRest(
-                        restId: UUID().uuidString,
-                        startDate: fullStartTime,
-                        endDate: fullEndTime,
-                        keyword: viewModel.restNote
-                    )
+            Text("Выбор категории:")
+            VStack {
+                HStack {
+                    ForEach(categories.prefix(3), id: \.name) { category in
+                        createCategoryButton(category)
+                    }
                 }
-                viewModel.toggleRestView()
+                HStack {
+                    ForEach(categories.suffix(3), id: \.name) { category in
+                        createCategoryButton(category)
+                    }
+                }
             }
-            .disabled(viewModel.isIncorrect)
-            .foregroundColor((viewModel.isIncorrect) ? .red : .blue)
+            HStack {
+                Button(action: {
+                    viewModel.toggleRestView()
+                }) {
+                    Text("Назад")
+                }
+                Spacer()
+                Button("Далее") {
+                    let fullStartTime = viewModel.mergeDateAndTime(date: viewModel.selectedDate, time: viewModel.startTime)
+                    let fullEndTime = viewModel.mergeDateAndTime(date: viewModel.selectedDate, time: viewModel.endTime)
+                    Task {
+                        try await viewModel.addNewRest(
+                            restId: UUID().uuidString,
+                            startDate: fullStartTime,
+                            endDate: fullEndTime,
+                            keyword: viewModel.restNote,
+                            restType: viewModel.selectedCategory
+                        )
+                    }
+                    viewModel.toggleRestView()
+                }
+                .disabled(viewModel.isIncorrect)
+                .foregroundColor((viewModel.isIncorrect) ? .red : .blue)
+            }
         }
         .padding()
+        .onAppear {
+            viewModel.clearData()
+        }
+    }
+    
+    private func createCategoryButton(_ category: (name: String, imageName: String)) -> some View {
+        Button(action: {
+            viewModel.selectedCategory = category.name
+        }) {
+            VStack {
+                Image(systemName: category.imageName)
+                Text(category.name)
+                    .font(.caption)
+            }
+            .frame(width: 60, height: 60)
+            .background(viewModel.selectedCategory == category.name ? Color.green : Color.gray)
+            .foregroundColor(.white)
+            .cornerRadius(10)
+            .padding(10)
+        }
     }
 }

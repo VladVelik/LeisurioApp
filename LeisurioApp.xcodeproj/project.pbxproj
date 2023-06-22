@@ -43,6 +43,7 @@
 		2404297F2A20D2A20019FBB5 /* RestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2404297E2A20D2A20019FBB5 /* RestModel.swift */; };
 		24253ADE2A20D75E00E48764 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 24253ADD2A20D75E00E48764 /* FirebaseAuth */; };
 		24253AE12A20E1BF00E48764 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24253AE02A20E1BF00E48764 /* NotificationManager.swift */; };
+		242677132A4464A700A4DE80 /* RestDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242677122A4464A700A4DE80 /* RestDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,7 @@
 		2404297C2A20D27D0019FBB5 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		2404297E2A20D2A20019FBB5 /* RestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestModel.swift; sourceTree = "<group>"; };
 		24253AE02A20E1BF00E48764 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		242677122A4464A700A4DE80 /* RestDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -219,6 +221,7 @@
 			children = (
 				240429632A1F9B750019FBB5 /* MainView.swift */,
 				240429782A2015310019FBB5 /* MainViewModel.swift */,
+				242677122A4464A700A4DE80 /* RestDetailView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				240429752A1FC9960019FBB5 /* StatisticsViewModel.swift in Sources */,
 				2404297B2A20CF6C0019FBB5 /* BarView.swift in Sources */,
 				240429522A1E978D0019FBB5 /* SettingsViewModel.swift in Sources */,
+				242677132A4464A700A4DE80 /* RestDetailView.swift in Sources */,
 				240429662A1F9C8C0019FBB5 /* ScreenView.swift in Sources */,
 				240429792A2015310019FBB5 /* MainViewModel.swift in Sources */,
 				2404297F2A20D2A20019FBB5 /* RestModel.swift in Sources */,

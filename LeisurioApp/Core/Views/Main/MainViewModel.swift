@@ -15,7 +15,7 @@ final class MainViewModel: ObservableObject {
             }
         }
     }
-    
+    @Published var selectedCategory: String = ""
     @Published var isDatePickerShown: Bool = false
     @Published var isRestViewShown: Bool = false
     @Published var startTime: Date = Date()
@@ -24,6 +24,13 @@ final class MainViewModel: ObservableObject {
     @Published var restsForSelectedDate = [Rest]()
     
     var userId: String = ""
+    
+    func clearData() {
+        startTime = Date() // или какое-то другое начальное значение
+        endTime = Date() // или какое-то другое начальное значение
+        restNote = ""
+        selectedCategory = "" // или какое-то другое начальное значение
+    }
     
     var isIncorrect: Bool {
         endTime < startTime || restNote.isEmpty || restNote.count > 10
@@ -41,8 +48,14 @@ final class MainViewModel: ObservableObject {
         return userId
     }
     
-    func addNewRest(restId: String, startDate: Date, endDate: Date, keyword: String) async throws {
-        let newRest = Rest(restId: restId, startDate: startDate, endDate: endDate, keyword: keyword)
+    func addNewRest(restId: String, startDate: Date, endDate: Date, keyword: String, restType: String) async throws {
+        let newRest = Rest(
+            restId: restId,
+            startDate: startDate,
+            endDate: endDate,
+            keyword: keyword,
+            restType: restType
+        )
         do {
             let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
             try await UserManager.shared.addRestToUser(userId: authDataResult.uid, rest: newRest)
@@ -64,6 +77,12 @@ final class MainViewModel: ObservableObject {
     func toggleDatePicker() {
         withAnimation {
             isDatePickerShown.toggle()
+        }
+    }
+    
+    func closeDatePicker() {
+        withAnimation {
+            isDatePickerShown = false
         }
     }
     
@@ -91,4 +110,21 @@ final class MainViewModel: ObservableObject {
             print("Failed to get rests for selected date: \(error)")
         }
     }
+    
+    func deleteRest(at offsets: IndexSet) {
+        guard let index = offsets.first else { return }
+        let restToDelete = restsForSelectedDate[index]
+
+        Task {
+            do {
+                try await RestManager.shared.deleteRest(restId: restToDelete.restId)
+                DispatchQueue.main.async {
+                    self.restsForSelectedDate.remove(at: index)
+                }
+            } catch {
+                print("Failed to delete rest: \(error)")
+            }
+        }
+    }
+
 }
