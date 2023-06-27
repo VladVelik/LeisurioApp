@@ -22,6 +22,11 @@ struct ScreenView: View {
                     Image(systemName: "chart.bar.xaxis")
                     Text("Статистика")
                 }
+            NewsView()
+                .tabItem {
+                    Image(systemName: "bell.fill")
+                    Text("Новости")
+                }
             NavigationView {
                 ProfileView(showSignInView: $showSignInView)
             }
@@ -30,11 +35,5 @@ struct ScreenView: View {
                     Text("Профиль")
                 }
         }
-    }
-}
-
-struct ScreenView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
     }
 }

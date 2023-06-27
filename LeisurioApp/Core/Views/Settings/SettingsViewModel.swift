@@ -24,10 +24,12 @@ final class SettingsViewModel: ObservableObject {
     
     func signOut() throws {
         try AuthenticationManager.shared.signOut()
+        NotificationManager.shared.removeAllNotifications()
     }
     
     func deleteAccount() async throws {
         try await AuthenticationManager.shared.delete()
+        NotificationManager.shared.removeAllNotifications()
     }
     
     func resetPassword() async throws {

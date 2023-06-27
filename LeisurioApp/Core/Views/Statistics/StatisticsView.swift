@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StatisticsView: View {
     @ObservedObject var viewModel = StatisticsViewModel()
+    @State private var isFirstLoad = true
     
     var body: some View {
         ScrollView {
@@ -34,7 +35,10 @@ struct StatisticsView: View {
             }
             .padding()
             .onAppear {
-                viewModel.onAppear()
+                if isFirstLoad {
+                    viewModel.onAppear()
+                    isFirstLoad = false
+                }
             }
         }
     }

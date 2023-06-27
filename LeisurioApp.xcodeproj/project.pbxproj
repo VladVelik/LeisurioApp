@@ -44,6 +44,8 @@
 		24253ADE2A20D75E00E48764 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 24253ADD2A20D75E00E48764 /* FirebaseAuth */; };
 		24253AE12A20E1BF00E48764 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24253AE02A20E1BF00E48764 /* NotificationManager.swift */; };
 		242677132A4464A700A4DE80 /* RestDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242677122A4464A700A4DE80 /* RestDetailView.swift */; };
+		242677152A45D14B00A4DE80 /* RestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242677142A45D14B00A4DE80 /* RestView.swift */; };
+		2426771B2A4B243500A4DE80 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2426771A2A4B243500A4DE80 /* NewsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +80,8 @@
 		2404297E2A20D2A20019FBB5 /* RestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestModel.swift; sourceTree = "<group>"; };
 		24253AE02A20E1BF00E48764 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		242677122A4464A700A4DE80 /* RestDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestDetailView.swift; sourceTree = "<group>"; };
+		242677142A45D14B00A4DE80 /* RestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestView.swift; sourceTree = "<group>"; };
+		2426771A2A4B243500A4DE80 /* NewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +212,7 @@
 		2404295E2A1F9AA10019FBB5 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				242677192A4B241700A4DE80 /* News */,
 				240429692A1FACD00019FBB5 /* Profile */,
 				240429672A1FA1BB0019FBB5 /* Main */,
 				240429682A1FA1C10019FBB5 /* Statistics */,
@@ -222,6 +227,7 @@
 				240429632A1F9B750019FBB5 /* MainView.swift */,
 				240429782A2015310019FBB5 /* MainViewModel.swift */,
 				242677122A4464A700A4DE80 /* RestDetailView.swift */,
+				242677142A45D14B00A4DE80 /* RestView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -278,6 +284,14 @@
 				24253AE02A20E1BF00E48764 /* NotificationManager.swift */,
 			);
 			path = Notifications;
+			sourceTree = "<group>";
+		};
+		242677192A4B241700A4DE80 /* News */ = {
+			isa = PBXGroup;
+			children = (
+				2426771A2A4B243500A4DE80 /* NewsView.swift */,
+			);
+			path = News;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -338,6 +352,7 @@
 				240428F52A13A1D30019FBB5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				2404290A2A15038E0019FBB5 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				240429712A1FBB930019FBB5 /* XCRemoteSwiftPackageReference "JTAppleCalendar" */,
+				242677162A4B1D3D00A4DE80 /* XCRemoteSwiftPackageReference "Reachability.swift" */,
 			);
 			productRefGroup = 240428E32A1399140019FBB5 /* Products */;
 			projectDirPath = "";
@@ -382,6 +397,8 @@
 				2404297B2A20CF6C0019FBB5 /* BarView.swift in Sources */,
 				240429522A1E978D0019FBB5 /* SettingsViewModel.swift in Sources */,
 				242677132A4464A700A4DE80 /* RestDetailView.swift in Sources */,
+				242677152A45D14B00A4DE80 /* RestView.swift in Sources */,
+				2426771B2A4B243500A4DE80 /* NewsView.swift in Sources */,
 				240429662A1F9C8C0019FBB5 /* ScreenView.swift in Sources */,
 				240429792A2015310019FBB5 /* MainViewModel.swift in Sources */,
 				2404297F2A20D2A20019FBB5 /* RestModel.swift in Sources */,
@@ -524,11 +541,12 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LeisurioApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Leisurio;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -554,11 +572,12 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = LeisurioApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Leisurio;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -618,6 +637,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 8.0.0;
+			};
+		};
+		242677162A4B1D3D00A4DE80 /* XCRemoteSwiftPackageReference "Reachability.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ashleymills/Reachability.swift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

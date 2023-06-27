@@ -27,6 +27,10 @@ final class UserManager {
         try await userDocument(userId: userId).getDocument(as: DBUser.self)
     }
     
+    func updateRestForUser(userId: String, rest: Rest) async throws {
+        try await RestManager.shared.updateRest(rest: rest)
+    }
+    
     func addRestToUser(userId: String, rest: Rest) async throws {
         var user = try await getUser(userId: userId)
         user.rests.append(rest.restId)
@@ -50,9 +54,9 @@ final class UserManager {
         }
         
         let restsOnDate = rests.filter {
-            guard let start = $0.startDate, let end = $0.endDate else {
-                return false
-            }
+            let start = $0.startDate
+                    let end = $0.endDate
+                
             let startDay = calendar.startOfDay(for: start)
             let endDay = calendar.startOfDay(for: end)
             
@@ -60,5 +64,18 @@ final class UserManager {
         }
 
         return restsOnDate
+    }
+    
+    func getAllRestsForUser(userId: String) async throws -> [Rest] {
+        let user = try await getUser(userId: userId)
+        let restIds = user.rests
+        
+        var rests = [Rest]()
+        for restId in restIds {
+            let rest = try await RestManager.shared.getRest(restId: restId)
+            rests.append(rest)
+        }
+        
+        return rests
     }
 }

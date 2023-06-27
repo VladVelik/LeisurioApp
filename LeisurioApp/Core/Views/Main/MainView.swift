@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var viewModel = MainViewModel()
+    @State private var isFirstLoad = true
     
     var body: some View {
         VStack {
@@ -19,10 +20,11 @@ struct MainView: View {
                     }) {
                         Text(viewModel.isDatePickerShown ? "Убрать календарь" : "Показать календарь")
                     }
-                    
+
                     if viewModel.isDatePickerShown {
                         DatePicker("", selection: $viewModel.selectedDate, displayedComponents: .date)
                             .datePickerStyle(GraphicalDatePickerStyle())
+                            .frame(height: 330)
                     }
                     
                     HStack {
@@ -65,8 +67,11 @@ struct MainView: View {
         }
         .onAppear {
             Task {
-                let id = try await viewModel.fetchUserUid()
-                try await viewModel.getRestsForSelectedDate(userId: id)
+                if isFirstLoad {
+                    let id = try await viewModel.fetchUserUid()
+                    try await viewModel.getRestsForSelectedDate(userId: id)
+                    isFirstLoad = false
+                }
             }
         }
     }
@@ -74,6 +79,7 @@ struct MainView: View {
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMMM"
+        formatter.locale = Locale(identifier: "ru_RU")
         return formatter
     }()
 }
@@ -82,121 +88,46 @@ extension MainView {
     private var updateListOfRests: some View {
         Section {
             List {
-                if !viewModel.restsForSelectedDate.isEmpty {
-                    ForEach(viewModel.restsForSelectedDate.sorted(
-                        by: { ($0.startDate ?? Date.distantPast) < ($1.startDate ?? Date.distantPast) })) { rest in
-                            NavigationLink(destination: RestDetailView(rest: rest, timeFormatter: viewModel.timeFormatter)) {
-                                VStack {
-                                    Text(rest.keyword ?? "")
-                                    Text(" с \(viewModel.timeFormatter.string(from: rest.startDate ?? Date()))")
-                                    Text("до  \(viewModel.timeFormatter.string(from: rest.endDate ?? Date())) ")
-                                    Text(rest.restType ?? "")
+                if viewModel.isLoading {
+                    Text("Загрузка событий...")
+                } else if !viewModel.restsForSelectedDate.isEmpty {
+                    ForEach(Array(viewModel.sortedRestsForSelectedDate.indices), id: \.self) { sortedIndex in
+                        let (_, rest) = viewModel.sortedRestsForSelectedDate[sortedIndex]
+                        NavigationLink(destination: RestDetailView(viewModel: viewModel, rest: rest, timeFormatter: viewModel.timeFormatter)) {
+                            VStack {
+                                HStack {
+                                    Text("\(sortedIndex + 1)").bold()
+                                    Spacer()
+                                    Text("\(viewModel.timeFormatter.string(from: rest.startDate)) - \(viewModel.timeFormatter.string(from: rest.endDate))").bold()
+                                    Image(systemName: viewModel.getHourglassSymbol(for: rest))
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 30)
                                 }
-                                .bold()
-                                .frame(height: 140)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .background(Color.green)
-                                .cornerRadius(10)
+                                Spacer()
+                                Image(systemName: viewModel.getSymbolName(from: rest.restType) ?? "ellipsis.circle.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 80)
+                                Spacer()
+                                HStack {
+                                    Text(rest.keyword)
+                                    Spacer()
+                                }
                             }
+                            .padding()
+                            .foregroundColor(.white)
+                            .background(Color.green)
+                            .cornerRadius(10)
                         }
-                        .onDelete { item in
-                            viewModel.deleteRest(at: item)
-                        }
+                    }
+                    .onDelete { sortedIndex in
+                        viewModel.deleteRest(at: sortedIndex)
+                    }
                 } else {
                     Text("Сегодня событий нет")
                 }
             }
-        }
-    }
-}
-
-struct RestView: View {
-    @ObservedObject var viewModel: MainViewModel
-    
-    private let timeFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter
-    }()
-    
-    var categories: [(name: String, imageName: String)] = [
-        ("Игры", "gamecontroller.fill"),
-        ("Спорт", "sportscourt.fill"),
-        ("Хобби", "paintpalette.fill"),
-        ("Общение", "message.fill"),
-        ("Прогулки", "figure.walk"),
-        ("Другое", "ellipsis.circle.fill")
-    ]
-    
-    var body: some View {
-        VStack {
-            Text("Добавить отдых")
-                .font(.headline)
-            DatePicker("Начало отдыха:", selection: $viewModel.startTime, displayedComponents: .hourAndMinute)
-                .datePickerStyle(DefaultDatePickerStyle())
-            DatePicker("Окончание отдыха:", selection: $viewModel.endTime, displayedComponents: .hourAndMinute)
-                .datePickerStyle(DefaultDatePickerStyle())
-            TextField("Заметка об отдыхе", text: $viewModel.restNote)
-                .padding()
-            Text("Выбор категории:")
-            VStack {
-                HStack {
-                    ForEach(categories.prefix(3), id: \.name) { category in
-                        createCategoryButton(category)
-                    }
-                }
-                HStack {
-                    ForEach(categories.suffix(3), id: \.name) { category in
-                        createCategoryButton(category)
-                    }
-                }
-            }
-            HStack {
-                Button(action: {
-                    viewModel.toggleRestView()
-                }) {
-                    Text("Назад")
-                }
-                Spacer()
-                Button("Далее") {
-                    let fullStartTime = viewModel.mergeDateAndTime(date: viewModel.selectedDate, time: viewModel.startTime)
-                    let fullEndTime = viewModel.mergeDateAndTime(date: viewModel.selectedDate, time: viewModel.endTime)
-                    Task {
-                        try await viewModel.addNewRest(
-                            restId: UUID().uuidString,
-                            startDate: fullStartTime,
-                            endDate: fullEndTime,
-                            keyword: viewModel.restNote,
-                            restType: viewModel.selectedCategory
-                        )
-                    }
-                    viewModel.toggleRestView()
-                }
-                .disabled(viewModel.isIncorrect)
-                .foregroundColor((viewModel.isIncorrect) ? .red : .blue)
-            }
-        }
-        .padding()
-        .onAppear {
-            viewModel.clearData()
-        }
-    }
-    
-    private func createCategoryButton(_ category: (name: String, imageName: String)) -> some View {
-        Button(action: {
-            viewModel.selectedCategory = category.name
-        }) {
-            VStack {
-                Image(systemName: category.imageName)
-                Text(category.name)
-                    .font(.caption)
-            }
-            .frame(width: 60, height: 60)
-            .background(viewModel.selectedCategory == category.name ? Color.green : Color.gray)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-            .padding(10)
         }
     }
 }

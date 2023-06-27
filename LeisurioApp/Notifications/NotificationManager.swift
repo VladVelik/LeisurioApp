@@ -31,7 +31,7 @@ class NotificationManager {
         content.body = "Don't forget about \(note)!"
         content.sound = UNNotificationSound.default
 
-        let components = Calendar.current.dateComponents([.hour, .minute], from: startDate)
+        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: startDate)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
         
         let request = UNNotificationRequest(identifier: restId, content: content, trigger: trigger)
@@ -68,5 +68,12 @@ class NotificationManager {
         
         let defaults = UserDefaults.standard
         defaults.set(filteredNotifications, forKey: "notifications")
+    }
+    
+    func removeAllNotifications() {
+        notificationCenter.removeAllPendingNotificationRequests()
+        
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "notifications")
     }
 }
