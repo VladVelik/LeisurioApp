@@ -14,7 +14,16 @@ final class Utilities {
     
     @MainActor
     func topViewController(controller: UIViewController? = nil) -> UIViewController? {
-        let controller = controller ?? UIApplication.shared.keyWindow?.rootViewController
+        let controller: UIViewController? = {
+            if let controller = controller {
+                return controller
+            } else {
+                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+                    return nil
+                }
+                return windowScene.windows.filter { $0.isKeyWindow }.first?.rootViewController
+            }
+        }()
         
         if let navigationController = controller as? UINavigationController {
             return topViewController(controller: navigationController.visibleViewController)

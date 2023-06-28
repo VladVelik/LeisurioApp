@@ -34,7 +34,7 @@ struct MainView: View {
                             Image(systemName: "arrow.left")
                         }
                         
-                        Text("\(viewModel.selectedDate, formatter: dateFormatter)").font(.largeTitle)
+                        Text("\(viewModel.selectedDate, formatter: viewModel.dateFormatter)").font(.largeTitle)
                         
                         Button(action: {
                             viewModel.changeDate(by: 1)
@@ -54,34 +54,25 @@ struct MainView: View {
                 .allowsHitTesting(!viewModel.isRestViewShown)
                 
                 if viewModel.isRestViewShown {
-                    RestView(viewModel: viewModel)
+                    CreateRestView(mainViewModel: viewModel)
                         .background(Color.white)
                         .cornerRadius(20)
                         .shadow(radius: 20)
                         .padding([.leading, .trailing], 20)
                         .frame(alignment: .center)
-                    
                 }
             }
             Spacer()
         }
         .onAppear {
-            Task {
-                if isFirstLoad {
-                    let id = try await viewModel.fetchUserUid()
-                    try await viewModel.getRestsForSelectedDate(userId: id)
+            if isFirstLoad {
+                Task {
+                    try await viewModel.updateData()
                     isFirstLoad = false
                 }
             }
         }
     }
-    
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d MMMM"
-        formatter.locale = Locale(identifier: "ru_RU")
-        return formatter
-    }()
 }
 
 extension MainView {
@@ -93,33 +84,10 @@ extension MainView {
                 } else if !viewModel.restsForSelectedDate.isEmpty {
                     ForEach(Array(viewModel.sortedRestsForSelectedDate.indices), id: \.self) { sortedIndex in
                         let (_, rest) = viewModel.sortedRestsForSelectedDate[sortedIndex]
-                        NavigationLink(destination: RestDetailView(viewModel: viewModel, rest: rest, timeFormatter: viewModel.timeFormatter)) {
-                            VStack {
-                                HStack {
-                                    Text("\(sortedIndex + 1)").bold()
-                                    Spacer()
-                                    Text("\(viewModel.timeFormatter.string(from: rest.startDate)) - \(viewModel.timeFormatter.string(from: rest.endDate))").bold()
-                                    Image(systemName: viewModel.getHourglassSymbol(for: rest))
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 30)
-                                }
-                                Spacer()
-                                Image(systemName: viewModel.getSymbolName(from: rest.restType) ?? "ellipsis.circle.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 80)
-                                Spacer()
-                                HStack {
-                                    Text(rest.keyword)
-                                    Spacer()
-                                }
-                            }
-                            .padding()
-                            .foregroundColor(.white)
-                            .background(Color.green)
-                            .cornerRadius(10)
+                        NavigationLink(destination: RestDetailView(mainViewModel: viewModel, rest: rest, timeFormatter: viewModel.timeFormatter)) {
+                            RestView(sortedIndex: sortedIndex, rest: rest, viewModel: viewModel)
                         }
+                        .id(rest.restId)
                     }
                     .onDelete { sortedIndex in
                         viewModel.deleteRest(at: sortedIndex)

@@ -44,8 +44,12 @@
 		24253ADE2A20D75E00E48764 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 24253ADD2A20D75E00E48764 /* FirebaseAuth */; };
 		24253AE12A20E1BF00E48764 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24253AE02A20E1BF00E48764 /* NotificationManager.swift */; };
 		242677132A4464A700A4DE80 /* RestDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242677122A4464A700A4DE80 /* RestDetailView.swift */; };
-		242677152A45D14B00A4DE80 /* RestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242677142A45D14B00A4DE80 /* RestView.swift */; };
 		2426771B2A4B243500A4DE80 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2426771A2A4B243500A4DE80 /* NewsView.swift */; };
+		2426771D2A4C6AEF00A4DE80 /* RestDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2426771C2A4C6AEF00A4DE80 /* RestDetailViewModel.swift */; };
+		242677242A4C80B700A4DE80 /* RestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 242677232A4C80B700A4DE80 /* RestView.swift */; };
+		247C50282A4C82880023A058 /* CreateRestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247C50272A4C82880023A058 /* CreateRestView.swift */; };
+		247C502A2A4C82990023A058 /* CreateRestViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247C50292A4C82990023A058 /* CreateRestViewModel.swift */; };
+		247C502C2A4C85E40023A058 /* CreateRestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 247C502B2A4C85E40023A058 /* CreateRestModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,8 +84,12 @@
 		2404297E2A20D2A20019FBB5 /* RestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestModel.swift; sourceTree = "<group>"; };
 		24253AE02A20E1BF00E48764 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		242677122A4464A700A4DE80 /* RestDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestDetailView.swift; sourceTree = "<group>"; };
-		242677142A45D14B00A4DE80 /* RestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestView.swift; sourceTree = "<group>"; };
 		2426771A2A4B243500A4DE80 /* NewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsView.swift; sourceTree = "<group>"; };
+		2426771C2A4C6AEF00A4DE80 /* RestDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestDetailViewModel.swift; sourceTree = "<group>"; };
+		242677232A4C80B700A4DE80 /* RestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestView.swift; sourceTree = "<group>"; };
+		247C50272A4C82880023A058 /* CreateRestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRestView.swift; sourceTree = "<group>"; };
+		247C50292A4C82990023A058 /* CreateRestViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRestViewModel.swift; sourceTree = "<group>"; };
+		247C502B2A4C85E40023A058 /* CreateRestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateRestModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -224,10 +232,9 @@
 		240429672A1FA1BB0019FBB5 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				240429632A1F9B750019FBB5 /* MainView.swift */,
-				240429782A2015310019FBB5 /* MainViewModel.swift */,
-				242677122A4464A700A4DE80 /* RestDetailView.swift */,
-				242677142A45D14B00A4DE80 /* RestView.swift */,
+				242677202A4C7F9C00A4DE80 /* MainScreen */,
+				247C50262A4C82710023A058 /* RestAdding */,
+				242677222A4C803400A4DE80 /* RestScreen */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -292,6 +299,35 @@
 				2426771A2A4B243500A4DE80 /* NewsView.swift */,
 			);
 			path = News;
+			sourceTree = "<group>";
+		};
+		242677202A4C7F9C00A4DE80 /* MainScreen */ = {
+			isa = PBXGroup;
+			children = (
+				240429632A1F9B750019FBB5 /* MainView.swift */,
+				242677232A4C80B700A4DE80 /* RestView.swift */,
+				240429782A2015310019FBB5 /* MainViewModel.swift */,
+			);
+			path = MainScreen;
+			sourceTree = "<group>";
+		};
+		242677222A4C803400A4DE80 /* RestScreen */ = {
+			isa = PBXGroup;
+			children = (
+				242677122A4464A700A4DE80 /* RestDetailView.swift */,
+				2426771C2A4C6AEF00A4DE80 /* RestDetailViewModel.swift */,
+			);
+			path = RestScreen;
+			sourceTree = "<group>";
+		};
+		247C50262A4C82710023A058 /* RestAdding */ = {
+			isa = PBXGroup;
+			children = (
+				247C502B2A4C85E40023A058 /* CreateRestModel.swift */,
+				247C50272A4C82880023A058 /* CreateRestView.swift */,
+				247C50292A4C82990023A058 /* CreateRestViewModel.swift */,
+			);
+			path = RestAdding;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -383,6 +419,7 @@
 			files = (
 				240429702A1FAF8E0019FBB5 /* UserManager.swift in Sources */,
 				240429772A1FF4AA0019FBB5 /* RestManager.swift in Sources */,
+				2426771D2A4C6AEF00A4DE80 /* RestDetailViewModel.swift in Sources */,
 				240429092A13FEAE0019FBB5 /* SettingsView.swift in Sources */,
 				240428E82A1399140019FBB5 /* ContentView.swift in Sources */,
 				240428E62A1399140019FBB5 /* LeisurioAppApp.swift in Sources */,
@@ -397,15 +434,18 @@
 				2404297B2A20CF6C0019FBB5 /* BarView.swift in Sources */,
 				240429522A1E978D0019FBB5 /* SettingsViewModel.swift in Sources */,
 				242677132A4464A700A4DE80 /* RestDetailView.swift in Sources */,
-				242677152A45D14B00A4DE80 /* RestView.swift in Sources */,
+				242677242A4C80B700A4DE80 /* RestView.swift in Sources */,
 				2426771B2A4B243500A4DE80 /* NewsView.swift in Sources */,
+				247C502C2A4C85E40023A058 /* CreateRestModel.swift in Sources */,
 				240429662A1F9C8C0019FBB5 /* ScreenView.swift in Sources */,
 				240429792A2015310019FBB5 /* MainViewModel.swift in Sources */,
+				247C502A2A4C82990023A058 /* CreateRestViewModel.swift in Sources */,
 				2404297F2A20D2A20019FBB5 /* RestModel.swift in Sources */,
 				240429012A13F8650019FBB5 /* AuthenticationView.swift in Sources */,
 				240429052A13F90E0019FBB5 /* AuthenticationManager.swift in Sources */,
 				2404296D2A1FAD010019FBB5 /* ProfileViewModel.swift in Sources */,
 				240429122A1508760019FBB5 /* Utilities.swift in Sources */,
+				247C50282A4C82880023A058 /* CreateRestView.swift in Sources */,
 				24253AE12A20E1BF00E48764 /* NotificationManager.swift in Sources */,
 				240429642A1F9B750019FBB5 /* MainView.swift in Sources */,
 				240429032A13F89F0019FBB5 /* SignInEmailView.swift in Sources */,

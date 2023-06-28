@@ -49,8 +49,8 @@ class StatisticsViewModel: ObservableObject {
             do {
                 let rests = try await UserManager.shared.getRestsForUserOnDate(userId: userId, date: currentDate)
                 let totalRestMinutes = rests.reduce(0) { (result, rest) in
-                    let start = rest.startDate ?? Date()
-                    let end = rest.endDate ?? Date()
+                    let start = rest.startDate
+                    let end = rest.endDate
                     let restDuration = end.timeIntervalSince(start) / 60
                     return result + restDuration
                 }
