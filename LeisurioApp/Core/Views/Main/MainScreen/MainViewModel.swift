@@ -8,10 +8,17 @@
 import SwiftUI
 
 final class MainViewModel: ObservableObject {
+    private var cancellationToken: CancellationToken?
+    
     @Published var selectedDate: Date = Date() {
         didSet {
-            Task {
+            cancellationToken?.cancel()
+            let task = Task {
                 try await getRestsForSelectedDate(userId: userId)
+            }
+            
+            cancellationToken = CancellationToken {
+                task.cancel()
             }
         }
     }
@@ -31,6 +38,7 @@ final class MainViewModel: ObservableObject {
     ]
     
     var userId: String = ""
+    private var restTimers: [Timer] = []
     
     var timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -95,6 +103,11 @@ final class MainViewModel: ObservableObject {
         }
         do {
             let rests = try await UserManager.shared.getRestsForUserOnDate(userId: userId, date: selectedDate)
+            if Task.isCancelled { return }
+            
+            self.clearRestTimers()
+            self.setRestTimers(for: rests)
+            
             DispatchQueue.main.async {
                 self.restsForSelectedDate = rests
                 self.isLoading = false
@@ -148,5 +161,42 @@ final class MainViewModel: ObservableObject {
         } else {
             return "hourglass.tophalf.filled"
         }
+    }
+    
+    private func clearRestTimers() {
+        for timer in restTimers {
+            timer.invalidate()
+        }
+        restTimers.removeAll()
+    }
+    
+    private func setRestTimers(for rests: [Rest]) {
+        for rest in rests {
+            let startTimer = Timer(fire: rest.startDate, interval: 0, repeats: false) { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.objectWillChange.send()
+                }
+            }
+            let endTimer = Timer(fire: rest.endDate, interval: 0, repeats: false) { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.objectWillChange.send()
+                }
+            }
+            RunLoop.main.add(startTimer, forMode: .default)
+            RunLoop.main.add(endTimer, forMode: .default)
+            restTimers.append(contentsOf: [startTimer, endTimer])
+        }
+    }
+}
+
+struct CancellationToken {
+    private let onCancel: () -> Void
+    
+    init(_ onCancel: @escaping () -> Void) {
+        self.onCancel = onCancel
+    }
+    
+    func cancel() {
+        onCancel()
     }
 }

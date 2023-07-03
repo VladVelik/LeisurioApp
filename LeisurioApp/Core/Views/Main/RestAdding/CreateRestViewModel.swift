@@ -53,7 +53,8 @@ final class CreateRestViewModel: ObservableObject {
         restType: String,
         preRestMood: Int = 3,
         postRestMood: Int = 3,
-        finalRestMood: Int = 3
+        finalRestMood: Int = 3,
+        isRated: Bool = false
     ) async throws {
         let newRest = Rest(
             restId: restId,
@@ -63,7 +64,8 @@ final class CreateRestViewModel: ObservableObject {
             restType: restType,
             preRestMood: preRestMood,
             postRestMood: postRestMood,
-            finalRestMood: finalRestMood
+            finalRestMood: finalRestMood,
+            isRated: isRated
         )
         do {
             let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()

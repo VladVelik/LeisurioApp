@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		24036D2A2A531D2100A40034 /* PieChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24036D292A531D2100A40034 /* PieChart.swift */; };
 		240428E62A1399140019FBB5 /* LeisurioAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240428E52A1399140019FBB5 /* LeisurioAppApp.swift */; };
 		240428E82A1399140019FBB5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240428E72A1399140019FBB5 /* ContentView.swift */; };
 		240428EA2A13991C0019FBB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 240428E92A13991C0019FBB5 /* Assets.xcassets */; };
@@ -53,6 +54,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		24036D292A531D2100A40034 /* PieChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PieChart.swift; sourceTree = "<group>"; };
 		240428E22A1399140019FBB5 /* LeisurioApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeisurioApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		240428E52A1399140019FBB5 /* LeisurioAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeisurioAppApp.swift; sourceTree = "<group>"; };
 		240428E72A1399140019FBB5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 				240429612A1F9B3E0019FBB5 /* StatisticsView.swift */,
 				2404297A2A20CF6C0019FBB5 /* BarView.swift */,
 				240429742A1FC9960019FBB5 /* StatisticsViewModel.swift */,
+				24036D292A531D2100A40034 /* PieChart.swift */,
 			);
 			path = Statistics;
 			sourceTree = "<group>";
@@ -444,6 +447,7 @@
 				240429012A13F8650019FBB5 /* AuthenticationView.swift in Sources */,
 				240429052A13F90E0019FBB5 /* AuthenticationManager.swift in Sources */,
 				2404296D2A1FAD010019FBB5 /* ProfileViewModel.swift in Sources */,
+				24036D2A2A531D2100A40034 /* PieChart.swift in Sources */,
 				240429122A1508760019FBB5 /* Utilities.swift in Sources */,
 				247C50282A4C82880023A058 /* CreateRestView.swift in Sources */,
 				24253AE12A20E1BF00E48764 /* NotificationManager.swift in Sources */,

@@ -16,6 +16,7 @@ struct Rest: Codable, Identifiable {
     var preRestMood: Int
     var postRestMood: Int
     var finalRestMood: Int
+    var isRated: Bool
     
     var id: String {
         restId
@@ -29,7 +30,8 @@ struct Rest: Codable, Identifiable {
         restType: String,
         preRestMood: Int,
         postRestMood: Int,
-        finalRestMood: Int
+        finalRestMood: Int,
+        isRated: Bool
     ) {
         self.restId = restId
         self.startDate = startDate
@@ -39,6 +41,7 @@ struct Rest: Codable, Identifiable {
         self.preRestMood = preRestMood
         self.postRestMood = postRestMood
         self.finalRestMood = finalRestMood
+        self.isRated = isRated
     }
     
     enum CodingKeys: String, CodingKey {
@@ -50,6 +53,7 @@ struct Rest: Codable, Identifiable {
         case preRestMood = "pre_rest_mood"
         case postRestMood = "post_rest_mood"
         case finalRestMood = "final_rest_mood"
+        case isRated = "is_rated"
     }
     
     init(from decoder: Decoder) throws {
@@ -62,6 +66,7 @@ struct Rest: Codable, Identifiable {
         self.preRestMood = try container.decode(Int.self, forKey: .preRestMood)
         self.postRestMood = try container.decode(Int.self, forKey: .postRestMood)
         self.finalRestMood = try container.decode(Int.self, forKey: .finalRestMood)
+        self.isRated = try container.decode(Bool.self, forKey: .isRated)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -74,5 +79,6 @@ struct Rest: Codable, Identifiable {
         try container.encode(self.preRestMood, forKey: .preRestMood)
         try container.encode(self.postRestMood, forKey: .postRestMood)
         try container.encode(self.finalRestMood, forKey: .finalRestMood)
+        try container.encode(self.isRated, forKey: .isRated)
     }
 }

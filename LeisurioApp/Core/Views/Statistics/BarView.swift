@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+/**
 struct BarChartView: View {
     @ObservedObject var viewModel: StatisticsViewModel
     
@@ -44,3 +44,4 @@ struct BarView: View {
     }
     
 }
+*/

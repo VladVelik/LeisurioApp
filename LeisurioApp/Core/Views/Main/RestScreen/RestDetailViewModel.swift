@@ -40,7 +40,8 @@ final class RestDetailViewModel: ObservableObject {
                 restType: rest.restType,
                 preRestMood: preRestMood,
                 postRestMood: postRestMood,
-                finalRestMood: finalRestMood
+                finalRestMood: finalRestMood,
+                isRated: true
             )
 
             DispatchQueue.main.async {
@@ -63,7 +64,8 @@ final class RestDetailViewModel: ObservableObject {
         restType: String,
         preRestMood: Int,
         postRestMood: Int,
-        finalRestMood: Int
+        finalRestMood: Int,
+        isRated: Bool
     ) async throws {
         let updatedRest = Rest(
             restId: restId,
@@ -73,7 +75,8 @@ final class RestDetailViewModel: ObservableObject {
             restType: restType,
             preRestMood: preRestMood,
             postRestMood: postRestMood,
-            finalRestMood: finalRestMood
+            finalRestMood: finalRestMood,
+            isRated: isRated
         )
 
         do {
