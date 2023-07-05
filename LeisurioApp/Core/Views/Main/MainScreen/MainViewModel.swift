@@ -114,7 +114,9 @@ final class MainViewModel: ObservableObject {
             }
         } catch {
             print("Failed to get rests for selected date: \(error)")
-            self.isLoading = false
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
         }
     }
     

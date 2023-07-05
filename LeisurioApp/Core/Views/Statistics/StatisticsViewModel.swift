@@ -43,7 +43,10 @@ class StatisticsViewModel: ObservableObject {
         get {
             var typesData: [PieChartData] = []
             
-            typesData = restTypeData.map { PieChartData(id: UUID(), label: $0.type, restMinutes: $0.restMinutes) }
+            typesData = restTypeData.map {
+                PieChartData(id: UUID(), label: $0.type, restMinutes: $0.restMinutes)
+            }
+            
             return typesData
         }
     }
@@ -52,14 +55,12 @@ class StatisticsViewModel: ObservableObject {
         case week = "неделя"
         case month = "месяц"
         
-        var id: String { self.rawValue }
+        var id: String {
+            self.rawValue
+        }
+        
         var durationInDays: Int {
-            switch self {
-            case .week:
-                return 7
-            case .month:
-                return 30
-            }
+            self == .week ? 7 : 30
         }
     }
 

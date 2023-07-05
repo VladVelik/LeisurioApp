@@ -16,7 +16,7 @@ struct StatisticsView: View {
             Text("Статистика")
                 .fontWeight(.bold)
                 .font(.title)
-                .padding()
+                .padding([.top, .leading])
             ScrollView {
                 Picker("Timeframe", selection: $viewModel.selectedTimeframe) {
                     ForEach(StatisticsViewModel.Timeframe.allCases) { timeframe in
@@ -24,12 +24,14 @@ struct StatisticsView: View {
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
+                .padding([.leading, .trailing], 20)
                 .onChange(of: viewModel.selectedTimeframe) { newValue in
                     viewModel.fetchRestData()
                 }
+                
                 DatePicker("Выберите начало периода", selection: $viewModel.selectedStartDate, displayedComponents: .date)
                     .datePickerStyle(CompactDatePickerStyle())
-                    .padding(.bottom, 20)
+                    .padding([.leading, .trailing, .bottom], 20)
                     .onChange(of: viewModel.selectedStartDate) { newValue in
                         viewModel.fetchRestData()
                     }
@@ -44,25 +46,22 @@ struct StatisticsView: View {
                         )
                     }
                     .foregroundColor(.red)
+                    .padding()
                     
                     Text("Статистика по времени")
-                        .font(.title)
-                        .padding()
+                        .font(.title2)
                     
-                    PieChart(data: viewModel.preparedData)
+                    PieChart(rawData: viewModel.preparedData)
                         .padding()
                     
                     Text("Статистика по типу отдыха")
-                        .font(.title)
-                        .padding()
+                        .font(.title2)
                     
-                    PieChart(data: viewModel.typesData)
+                    PieChart(rawData: viewModel.typesData)
                         .padding()
                 }
-                
-                Spacer()
             }
-            .padding([.leading, .trailing, .bottom], 20)
+            .padding(.bottom, 10)
             .onAppear {
                 viewModel.onAppear()
             }

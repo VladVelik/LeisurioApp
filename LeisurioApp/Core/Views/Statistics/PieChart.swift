@@ -14,8 +14,23 @@ struct PieChartData: Identifiable {
 }
 
 struct PieChart: View {
-    let data: [PieChartData]
-    private let colors: [Color] = [.red, .green, .blue, .orange, .pink, .purple, .yellow]
+    let rawData: [PieChartData]
+        var data: [PieChartData] {
+            PieChart.arrangeData(rawData)
+        }
+    
+    private let colors: [Color] = [
+        .red,
+        .green,
+        .blue,
+        .orange,
+        .purple,
+        .yellow,
+        .brown,
+        .gray,
+        .indigo,
+        .mint
+    ]
     
     var body: some View {
         GeometryReader { geometry in
@@ -36,9 +51,10 @@ struct PieChart: View {
                     if data[index].restMinutes > 0 {
                         Text("\(data[index].label)")
                             .position(
-                                x: geometry.size.center.x + geometry.size.radius * 0.75 * cos(startAngle.radians + (endAngle.radians - startAngle.radians)/2),
+                                x: geometry.size.center.x + geometry.size.radius * 0.8 * cos(startAngle.radians + (endAngle.radians - startAngle.radians)/2),
                                       
-                                y: geometry.size.center.y + geometry.size.radius * 0.75 * sin(startAngle.radians + (endAngle.radians - startAngle.radians)/2))
+                                y: geometry.size.center.y + geometry.size.radius * 0.8 * sin(startAngle.radians + (endAngle.radians - startAngle.radians)/2)
+                            )
                     }
                 }
             }
@@ -46,6 +62,24 @@ struct PieChart: View {
         .aspectRatio(1, contentMode: .fit)
     }
     
+    private static func arrangeData(_ data: [PieChartData]) -> [PieChartData] {
+        let sortedData = data.sorted { $0.restMinutes > $1.restMinutes }
+        var arrangedData: [PieChartData] = []
+        var index = 0
+        
+        while index < sortedData.count / 2 {
+            arrangedData.append(sortedData[index])
+            arrangedData.append(sortedData[sortedData.count - 1 - index])
+            index += 1
+        }
+        
+        if sortedData.count % 2 != 0 {
+            arrangedData.append(sortedData[index])
+        }
+        
+        return arrangedData
+    }
+
     private func startAngle(for index: Int) -> Angle {
         if index == 0 {
             return Angle(degrees: 0)
