@@ -8,13 +8,30 @@
 import SwiftUI
 
 struct NewsView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+    @State private var currentPage = 0
 
-struct NewsView_Previews: PreviewProvider {
-    static var previews: some View {
-        NewsView()
+    var body: some View {
+        VStack {
+            Picker("", selection: $currentPage) {
+                Text("Уведомления").tag(0)
+                Text("Рекомендации").tag(1)
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding()
+
+            GeometryReader { geometry in
+                HStack(spacing: 0) {
+                    NotificationsView()
+                        .frame(width: geometry.size.width)
+                    RecommendationsView()
+                        .frame(width: geometry.size.width)
+                }
+                .offset(x: -CGFloat(self.currentPage) * geometry.size.width, y: 0)
+                .animation(
+                    .easeInOut(duration: 2),
+                    value: 1.0
+                )
+            }
+        }
     }
 }

@@ -39,6 +39,9 @@ struct StatisticsView: View {
                 if viewModel.isDataLoading {
                     Text("Построение графиков...")
                 } else {
+                    Text("Статистика по дням")
+                        .font(.title2)
+                    
                     Chart(viewModel.preparedData) { day in
                         BarMark(
                             x: .value("Day", day.label),
@@ -61,10 +64,11 @@ struct StatisticsView: View {
                         .padding()
                 }
             }
-            .padding(.bottom, 10)
             .onAppear {
                 viewModel.onAppear()
             }
+            
+            Spacer()
         }
     }
 }

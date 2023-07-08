@@ -15,7 +15,7 @@ struct ScreenView: View {
             MainView()
                 .tabItem {
                     Image(systemName: "house.fill")
-                    Text("Домой")
+                    Text("Главная")
                 }
             StatisticsView()
                 .tabItem {
