@@ -9,9 +9,8 @@ import SwiftUI
 
 struct RecommendationsView: View {
     var body: some View {
-        ScrollView {
-            Text("Рекомендаций нет")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        ListView(viewModel: RecommendationsViewModel()) { recommendation in
+            NewsElementView(newsEvent: recommendation)
         }
     }
 }

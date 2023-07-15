@@ -78,4 +78,33 @@ final class UserManager {
         
         return rests
     }
+    
+    func getRestsForUser(userId: String, startDate: Date, endDate: Date) async throws -> [Rest] {
+        let user = try await getUser(userId: userId)
+        let restIds = user.rests
+        
+        var rests = [Rest]()
+        for restId in restIds {
+            let rest = try await RestManager.shared.getRest(restId: restId)
+            rests.append(rest)
+        }
+        
+        let calendar = Calendar.current
+        let targetStartDate = calendar.startOfDay(for: startDate)
+        guard let targetEndDate = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: endDate)) else {
+            return []
+        }
+        
+        let restsInRange = rests.filter {
+            let start = $0.startDate
+            let end = $0.endDate
+
+            let startDay = calendar.startOfDay(for: start)
+            let endDay = calendar.startOfDay(for: end)
+
+            return (startDay >= targetStartDate && startDay < targetEndDate) || (endDay >= targetStartDate && endDay < targetEndDate)
+        }
+
+        return restsInRange
+    }
 }
