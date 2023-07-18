@@ -82,14 +82,15 @@ class NotificationsViewModel: ObservableObject, ListViewModel {
         } else {
             let times = oneDayRests.count
             let sum = oneDayRests.reduce(0) { $0 + Int($1.endDate.timeIntervalSince($1.startDate) / 60) }
-            self.items.append(NewsModel(title: "Отдых сегодня", text: "Вы отдыхали сегодня \(times) раз, общее время - \(sum) минут"))
+            
+            self.items.append(NewsModel(title: "Отдых сегодня", text: "Количество активностей сегодня - \(times), общее время в минутах - \(sum)"))
         }
     }
 
     private func checkUnratedRests(rests: [Rest], currentDate: Date) {
         let unratedRests = rests.filter { !$0.isRated && $0.endDate < currentDate }.count
         if unratedRests > 0 {
-            self.items.append(NewsModel(title: "Оцените отдых", text: "Оцените \(unratedRests) отдыхов!"))
+            self.items.append(NewsModel(title: "Оцените отдых", text: "Количество неоцененных активностей - \(unratedRests)"))
         }
     }
 

@@ -107,4 +107,26 @@ final class UserManager {
 
         return restsInRange
     }
+    
+    func updateUserName(userId: String, newUserName: String) async throws {
+        let userDocument = self.userDocument(userId: userId)
+        try await userDocument.updateData(["user_name" : newUserName])
+    }
+    
+    func updateUserPhotoUrl(userId: String, newPhoto: UIImage?) async throws {
+        guard let base64Image = newPhoto?.toBase64() else { return }
+        let db = Firestore.firestore()
+        try await db.collection("users").document(userId).updateData(["photoUrl": base64Image])
+    }
+}
+
+extension UIImage {
+    func toBase64() -> String? {
+        return self.jpegData(compressionQuality: 1.0)?.base64EncodedString()
+    }
+    
+    static func fromBase64(_ base64: String) -> UIImage? {
+        guard let data = Data(base64Encoded: base64) else { return nil }
+        return UIImage(data: data)
+    }
 }

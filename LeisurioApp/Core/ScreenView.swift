@@ -15,24 +15,24 @@ struct ScreenView: View {
             MainView()
                 .tabItem {
                     Image(systemName: "house.fill")
-                    Text("Главная")
+                    //Text("Главная")
                 }
             StatisticsView()
                 .tabItem {
                     Image(systemName: "chart.bar.xaxis")
-                    Text("Статистика")
+                    //Text("Статистика")
                 }
             NewsView()
                 .tabItem {
                     Image(systemName: "bell.fill")
-                    Text("Новости")
+                    //Text("Новости")
                 }
             NavigationView {
                 ProfileView(showSignInView: $showSignInView)
             }
                 .tabItem {
                     Image(systemName: "person.crop.circle.fill")
-                    Text("Профиль")
+                    //Text("Профиль")
                 }
         }
     }

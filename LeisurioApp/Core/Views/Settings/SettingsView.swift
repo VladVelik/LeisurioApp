@@ -48,14 +48,6 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
-            SettingsView(showSignInView: .constant(false))
-        }
-    }
-}
-
 extension SettingsView {
     private var emailSection: some View {
         Section {

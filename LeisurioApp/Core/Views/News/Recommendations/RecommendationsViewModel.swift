@@ -63,7 +63,6 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
         DispatchQueue.main.async {
             let now = Date()
             self.items.removeAll()
-            let sortedRests = rests.sorted { $0.startDate > $1.startDate }
             
             let fiveDaysAgo = Calendar.current.date(byAdding: .day, value: -5, to: now)!
             let recentRests = rests.filter { $0.endDate > fiveDaysAgo }
@@ -78,14 +77,13 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
     }
 
     private func checkRestTypeNotUsed(recentRests: [Rest], currentDate: Date) {
-        let restTypes = ["Игры", "Спорт", "Хобби", "Общение", "Прогулки", "Другое"]
+        let restTypes = ["игры", "спорт", "хобби", "общение", "прогулки"]
         
         for type in restTypes {
-            let threeDaysAgo = Calendar.current.date(byAdding: .day, value: -5, to: currentDate)!
             let recentRestsOfType = recentRests.filter { $0.restType == type }
             
             if recentRestsOfType.isEmpty {
-                self.items.append(NewsModel(title: "Забыли тип отдыха!", text: "Вы уже более 5 дней не выбирали \(type)!"))
+                self.items.append(NewsModel(title: "Не забудьте про тип отдыха!", text: "Вы уже более 5 дней не выбирали \(type)!"))
             }
         }
     }
@@ -159,6 +157,10 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
         for rest in recentRests {
             beforeRestRatings.append(rest.preRestMood)
             afterRestRatings.append(rest.postRestMood)
+        }
+        
+        if beforeRestRatings.isEmpty {
+            return
         }
         
         let meanBeforeRestRating = beforeRestRatings.reduce(0, +) / beforeRestRatings.count
