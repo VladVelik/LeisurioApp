@@ -10,9 +10,110 @@ import SwiftUI
 struct SettingsView: View {
     @StateObject private var viewModel = SettingsViewModel()
     @Binding var showSignInView: Bool
+    @State private var newUserName: String = ""
+    
+    @State var showingChangePassword = false
+    @State var showingChangeUserName = false
+    @State var showingChangeEmail = false
     
     var body: some View {
         List {
+            userNameSection
+            
+            if viewModel.authProviders.contains(.email) {
+                emailSection
+            }
+            
+            accountSection
+        }
+        .onAppear {
+            viewModel.loadAuthProviders()
+            Task {
+                try await viewModel.loadCurrentUser()
+            }
+        }
+        .navigationTitle("Settings")
+        .overlay(
+            overlayView:
+                ToastView(toast:
+                            Toast(
+                                title: viewModel.toastMessage,
+                                image: viewModel.toastImage),
+                          show: $viewModel.showToast
+                         ),
+            show: $viewModel.showToast
+        )
+    }
+}
+
+extension SettingsView {
+    private var emailSection: some View {
+        Section {
+            Button("Update Password") {
+                showingChangePassword = true
+            }
+            .sheet(isPresented: $showingChangePassword) {
+                ChangePasswordView(showingChangePassword: $showingChangePassword, completion: { success in
+                    if success {
+                        self.viewModel.toastMessage = "Password updated!"
+                        self.viewModel.toastImage = "checkmark.square"
+                        self.viewModel.showToast = true
+                    }
+                }, viewModel: viewModel)
+            }
+            
+            Button("Update email") {
+                showingChangeEmail = true
+            }
+            .sheet(isPresented: $showingChangeEmail) {
+                ChangeEmailView(showingChangeEmail: $showingChangeEmail, completion: { success in
+                    if success {
+                        self.viewModel.toastMessage = "Email updated!"
+                        self.viewModel.toastImage = "checkmark.square"
+                        self.viewModel.showToast = true
+                    }
+                }, viewModel: viewModel)
+            }
+        } header: {
+            Text("Email functions")
+        }
+        
+    }
+    
+    var userNameSection: some View {
+        Section {
+            //TextField("New Username", text: $newUserName)
+            
+            Button("Update Username") {
+                showingChangeUserName = true
+//                guard !newUserName.isEmpty else {
+//                    return
+//                }
+//                Task {
+//                    do {
+//                        try await viewModel.updateUserName(newUserName: newUserName)
+//                        print("username updated!")
+//                    } catch {
+//                        print(error)
+//                    }
+//                }
+            }
+            .sheet(isPresented: $showingChangeUserName) {
+                ChangeUserNameView(showingChangeUserName: $showingChangeUserName, completion: { success in
+                    if success {
+                        self.viewModel.toastMessage = "Username updated!"
+                        self.viewModel.toastImage = "checkmark.square"
+                        self.viewModel.showToast = true
+                    }
+                }, viewModel: viewModel)
+            }
+        } header: {
+            Text("Username")
+        }
+    }
+    
+    private var accountSection: some View {
+        Section {
             Button("Log out") {
                 Task {
                     do {
@@ -36,56 +137,8 @@ struct SettingsView: View {
             } label: {
                 Text("Delete account")
             }
-            
-            if viewModel.authProviders.contains(.email) {
-                emailSection
-            }
-        }
-        .onAppear {
-            viewModel.loadAuthProviders()
-        }
-        .navigationTitle("Settings")
-    }
-}
-
-extension SettingsView {
-    private var emailSection: some View {
-        Section {
-            Button("Reset password") {
-                Task {
-                    do {
-                        try await viewModel.resetPassword()
-                        print("password reset!")
-                    } catch {
-                        print(error)
-                    }
-                }
-            }
-            
-            Button("Update password") {
-                Task {
-                    do {
-                        try await viewModel.updatePassword()
-                        print("password updated!")
-                    } catch {
-                        print(error)
-                    }
-                }
-            }
-            
-            Button("Update email") {
-                Task {
-                    do {
-                        try await viewModel.updatePassword()
-                        print("email updated!")
-                    } catch {
-                        print(error)
-                    }
-                }
-            }
         } header: {
-            Text("Email functions")
+            Text("Account")
         }
     }
-
 }

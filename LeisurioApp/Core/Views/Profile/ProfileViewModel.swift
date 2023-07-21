@@ -6,11 +6,16 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 final class ProfileViewModel: ObservableObject {
     @Published var user: DBUser? = nil
     @Published var imageUrl: String? = nil
-
+    
+    @State var isImagePickerPresented = false
+    @Published var isLoadingImage = false
+    @State var username: String = ""
+    
     func loadCurrentUser() async throws {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         let userInfo = try await UserManager.shared.getUser(userId: authDataResult.uid)
@@ -20,16 +25,51 @@ final class ProfileViewModel: ObservableObject {
         }
     }
     
-    func updateUserName(newUserName: String) async throws {
-        guard let userId = user?.userId else { return }
-        try await UserManager.shared.updateUserName(userId: userId, newUserName: newUserName)
-        try await loadCurrentUser()
+    func imageChanging(newValue: PhotosPickerItem?) {
+        isLoadingImage = true
+        if let newValue {
+            saveProfileImage(item: newValue) {
+                self.isLoadingImage = false
+            }
+        }
     }
     
-    func updateUserPhotoUrl(newPhoto: UIImage?) async throws {
-        guard let userId = user?.userId else { return }
-        try await UserManager.shared.updateUserPhotoUrl(userId: userId, newPhoto: newPhoto)
-        try await loadCurrentUser()
+    func saveProfileImage(item: PhotosPickerItem, completion: @escaping () -> Void) {
+        guard let user else { return }
+        
+        if (user.photoUrl != "") {
+            Task {
+                try await self.deleteProfileImage()
+            }
+        }
+        
+        Task {
+            guard let data = try await item.loadTransferable(type: Data.self) else { return }
+            let (path, name) = try await StorageManager.shared.saveImage(data: data, userId: user.userId)
+            
+            print("SUCCESS!")
+            print(path)
+            print(name)
+            let url = try await StorageManager.shared.getUrlForImage(path: path)
+            try await UserManager.shared.updateUserProfileImagePath(userId: user.userId, path: path, url: url.absoluteString)
+            try await loadCurrentUser()
+            DispatchQueue.main.async {
+                completion()
+            }
+        }
+    }
+    
+    func deleteProfileImage() async throws {
+        guard let user, let path = user.photoPath else { return }
+        
+        Task {
+            do {
+                try await StorageManager.shared.deleteImage(path: path)
+            } catch {
+                print("Deletion error: \(error)")
+            }
+            try await UserManager.shared.updateUserProfileImagePath(userId: user.userId, path: "", url: "")
+        }
     }
 
 }

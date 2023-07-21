@@ -19,8 +19,8 @@ struct CreateRestView: View {
                 .datePickerStyle(DefaultDatePickerStyle())
             DatePicker("Окончание отдыха:", selection: $createRestViewModel.endTime, displayedComponents: .hourAndMinute)
                 .datePickerStyle(DefaultDatePickerStyle())
-            TextField("Заметка об отдыхе", text: $createRestViewModel.restNote)
-                .padding()
+            TextFieldStyleView(title: "Заметка об отдыхе", text: $createRestViewModel.restNote, isSecure: false)
+                .padding(.top, 20)
             Text("Выбор категории:")
             VStack {
                 HStack {

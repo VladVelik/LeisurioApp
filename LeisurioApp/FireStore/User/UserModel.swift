@@ -11,6 +11,7 @@ struct DBUser: Codable {
     let userId: String
     let email: String?
     let photoUrl: String?
+    let photoPath: String?
     let dateCreated: Date?
     var rests: [String]
     var userName: String?
@@ -24,6 +25,7 @@ struct DBUser: Codable {
         self.rests = []
         self.userName = "User"
         self.numOfRests = 0
+        self.photoPath = nil
     }
     
     enum CodingKeys: String, CodingKey {
@@ -34,6 +36,7 @@ struct DBUser: Codable {
         case rests = "rests"
         case userName = "user_name"
         case numOfRests = "num_of_rests"
+        case photoPath = "photo_path"
     }
     
     init(from decoder: Decoder) throws {
@@ -41,6 +44,7 @@ struct DBUser: Codable {
         self.userId = try container.decode(String.self, forKey: .userId)
         self.email = try container.decodeIfPresent(String.self, forKey: .email)
         self.photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
+        self.photoPath = try container.decodeIfPresent(String.self, forKey: .photoPath)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
         self.rests = try container.decodeIfPresent([String].self, forKey: .rests) ?? []
         self.userName = try container.decodeIfPresent(String.self, forKey: .userName)
@@ -52,6 +56,7 @@ struct DBUser: Codable {
         try container.encode(self.userId, forKey: .userId)
         try container.encodeIfPresent(self.email, forKey: .email)
         try container.encodeIfPresent(self.photoUrl, forKey: .photoUrl)
+        try container.encodeIfPresent(self.photoPath, forKey: .photoPath)
         try container.encodeIfPresent(self.dateCreated, forKey: .dateCreated)
         try container.encodeIfPresent(self.rests, forKey: .rests)
         try container.encodeIfPresent(self.userName, forKey: .userName)
