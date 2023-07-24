@@ -16,6 +16,10 @@ final class ProfileViewModel: ObservableObject {
     @Published var isLoadingImage = false
     @State var username: String = ""
     
+    @Published var showToast: Bool = false
+    @Published var toastMessage: String = ""
+    @Published var toastImage: String = ""
+    
     func loadCurrentUser() async throws {
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         let userInfo = try await UserManager.shared.getUser(userId: authDataResult.uid)
@@ -30,6 +34,9 @@ final class ProfileViewModel: ObservableObject {
         if let newValue {
             saveProfileImage(item: newValue) {
                 self.isLoadingImage = false
+                self.toastMessage = "Image updated!"
+                self.toastImage = "checkmark.square"
+                self.showToast = true
             }
         }
     }

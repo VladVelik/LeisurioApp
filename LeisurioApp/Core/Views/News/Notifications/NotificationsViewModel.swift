@@ -34,7 +34,7 @@ class NotificationsViewModel: ObservableObject, ListViewModel {
         Task {
             do {
                 DispatchQueue.main.async {
-                    self.text = "Загрузка уведомлений..."
+                    self.text = "  загрузка уведомлений..."
                 }
                 self.userId = try await fetchUserUid()
                 let calendar = Calendar.current

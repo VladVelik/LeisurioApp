@@ -90,6 +90,16 @@ struct ProfileView: View {
             
             Spacer()
         }
+        .overlay(
+            overlayView:
+                ToastView(toast:
+                            Toast(
+                                title: viewModel.toastMessage,
+                                image: viewModel.toastImage),
+                          show: $viewModel.showToast
+                         ),
+            show: $viewModel.showToast
+        )
         .task {
             try? await viewModel.loadCurrentUser()
         }

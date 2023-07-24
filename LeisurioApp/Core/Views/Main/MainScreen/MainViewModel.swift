@@ -27,6 +27,10 @@ final class MainViewModel: ObservableObject {
     @Published var isRestViewShown: Bool = false
     @Published var restsForSelectedDate = [Rest]()
     @Published var isLoading = false
+    
+    @Published var showToast: Bool = false
+    @Published var toastMessage: String = ""
+    @Published var toastImage: String = ""
    
     let categories: [(name: String, imageName: String)] = [
         ("Игры", "gamecontroller.fill"),
@@ -98,6 +102,7 @@ final class MainViewModel: ObservableObject {
     }
     
     func getRestsForSelectedDate(userId: String) async throws {
+        print("\(NotificationManager.shared.getSavedNotifications())")
         DispatchQueue.main.async {
             self.isLoading = true
         }

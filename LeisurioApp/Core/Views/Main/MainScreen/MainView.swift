@@ -80,7 +80,12 @@ extension MainView {
         Section {
             List {
                 if viewModel.isLoading {
-                    Text("Загрузка событий...")
+                    HStack {
+                        ProgressView()
+                            .scaledToFit()
+                        Text("  загрузка событий...")
+                    }
+                    .id(UUID())
                 } else if !viewModel.restsForSelectedDate.isEmpty {
                     ForEach(Array(viewModel.sortedRestsForSelectedDate.indices), id: \.self) { sortedIndex in
                         let (_, rest) = viewModel.sortedRestsForSelectedDate[sortedIndex]
@@ -96,6 +101,16 @@ extension MainView {
                     Text("Сегодня событий нет")
                 }
             }
+            .overlay(
+                overlayView:
+                    ToastView(toast:
+                                Toast(
+                                    title: viewModel.toastMessage,
+                                    image: viewModel.toastImage),
+                              show: $viewModel.showToast
+                             ),
+                show: $viewModel.showToast
+            )
         }
     }
 }

@@ -23,8 +23,14 @@ struct ListView<ViewModel: ObservableObject & ListViewModel, Content: View>: Vie
         VStack {
             if viewModel.items.isEmpty {
                 ScrollView {
-                    Text("\(viewModel.text)")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    
+                    HStack {
+                        if (viewModel.text != "Уведомлений нет") {
+                            ProgressView()
+                        }
+                        Text("\(viewModel.text)")
+                    }
+                    .id(UUID())
                 }
                 .refreshable {
                     Task {

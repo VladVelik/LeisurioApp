@@ -34,7 +34,7 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
         Task {
             do {
                 DispatchQueue.main.async {
-                    self.text = "Загрузка рекомендаций..."
+                    self.text = "  загрузка рекомендаций..."
                 }
                 self.userId = try await fetchUserUid()
                 let calendar = Calendar.current

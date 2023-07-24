@@ -82,21 +82,8 @@ extension SettingsView {
     
     var userNameSection: some View {
         Section {
-            //TextField("New Username", text: $newUserName)
-            
             Button("Update Username") {
                 showingChangeUserName = true
-//                guard !newUserName.isEmpty else {
-//                    return
-//                }
-//                Task {
-//                    do {
-//                        try await viewModel.updateUserName(newUserName: newUserName)
-//                        print("username updated!")
-//                    } catch {
-//                        print(error)
-//                    }
-//                }
             }
             .sheet(isPresented: $showingChangeUserName) {
                 ChangeUserNameView(showingChangeUserName: $showingChangeUserName, completion: { success in

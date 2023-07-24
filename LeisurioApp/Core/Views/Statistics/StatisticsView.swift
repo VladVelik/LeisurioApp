@@ -37,7 +37,12 @@ struct StatisticsView: View {
                     }
                 
                 if viewModel.isDataLoading {
-                    Text("Построение графиков...")
+                    HStack {
+                        ProgressView()
+                            .scaledToFit()
+                        Text("  построение графиков...")
+                    }
+                    .id(UUID())
                 } else {
                     Text("Статистика по дням")
                         .font(.title2)

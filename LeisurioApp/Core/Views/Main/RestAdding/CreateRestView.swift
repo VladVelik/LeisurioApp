@@ -61,6 +61,11 @@ struct CreateRestView: View {
                         keyword: createRestViewModel.restNote,
                         restType: createRestViewModel.selectedCategory
                     )
+                    
+                    self.mainViewModel.toastMessage = "Rest added!"
+                    self.mainViewModel.toastImage = "checkmark.square"
+                    self.mainViewModel.showToast = true
+                    
                     try await mainViewModel.updateData()
                 }
                 mainViewModel.toggleRestView()
