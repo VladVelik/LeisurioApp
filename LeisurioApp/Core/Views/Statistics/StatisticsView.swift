@@ -13,14 +13,14 @@ struct StatisticsView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Статистика")
+            Text(NSLocalizedString("Statistics", comment: ""))
                 .fontWeight(.bold)
                 .font(.title)
                 .padding([.top, .leading])
             ScrollView {
                 Picker("Timeframe", selection: $viewModel.selectedTimeframe) {
                     ForEach(StatisticsViewModel.Timeframe.allCases) { timeframe in
-                        Text(timeframe.rawValue).tag(timeframe)
+                        Text(timeframe.displayName).tag(timeframe)
                     }
                 }
                 .pickerStyle(SegmentedPickerStyle())
@@ -29,7 +29,7 @@ struct StatisticsView: View {
                     viewModel.fetchRestData()
                 }
                 
-                DatePicker("Выберите начало периода", selection: $viewModel.selectedStartDate, displayedComponents: .date)
+                DatePicker(NSLocalizedString("Choose period start", comment: ""), selection: $viewModel.selectedStartDate, displayedComponents: .date)
                     .datePickerStyle(CompactDatePickerStyle())
                     .padding([.leading, .trailing, .bottom], 20)
                     .onChange(of: viewModel.selectedStartDate) { newValue in
@@ -40,11 +40,11 @@ struct StatisticsView: View {
                     HStack {
                         ProgressView()
                             .scaledToFit()
-                        Text("  построение графиков...")
+                        Text(NSLocalizedString("  diagramming...", comment: ""))
                     }
                     .id(UUID())
                 } else {
-                    Text("Статистика по дням")
+                    Text(NSLocalizedString("Daily statistics", comment: ""))
                         .font(.title2)
                     
                     Chart(viewModel.preparedData) { day in
@@ -56,13 +56,13 @@ struct StatisticsView: View {
                     .foregroundColor(.red)
                     .padding()
                     
-                    Text("Статистика по времени")
+                    Text(NSLocalizedString("Time statistics", comment: ""))
                         .font(.title2)
                     
                     PieChart(rawData: viewModel.preparedData)
                         .padding()
                     
-                    Text("Статистика по типу отдыха")
+                    Text(NSLocalizedString("Leisure statistics", comment: ""))
                         .font(.title2)
                     
                     PieChart(rawData: viewModel.typesData)

@@ -20,12 +20,12 @@ struct ChangeUserNameView: View {
     var body: some View {
         NavigationView {
             VStack {
-                TextFieldStyleView(title: "New Username", text: $newUserName, isSecure: false)
+                TextFieldStyleView(title: NSLocalizedString("New Username", comment: ""), text: $newUserName, isSecure: false)
                 Spacer()
                 Button(action: {
                     if newUserName.count < 1 {
                         showError = true
-                        errorMessage = "New user name should be at least 1 characters long."
+                        errorMessage = NSLocalizedString("New Username cannot be empty!", comment: "")
                     } else {
                         Task {
                             do {
@@ -41,7 +41,7 @@ struct ChangeUserNameView: View {
                         }
                     }
                 }) {
-                    Text("Сохранить")
+                    Text(NSLocalizedString("Save", comment: ""))
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
@@ -52,11 +52,11 @@ struct ChangeUserNameView: View {
             }
             .padding()
             .alert(isPresented: $showError) {
-                Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+                Alert(title: Text(NSLocalizedString("Error", comment: "")), message: Text(errorMessage), dismissButton: .default(Text("OK")))
             }
-            .navigationTitle("Change User name")
+            .navigationTitle(NSLocalizedString("Change Username", comment: ""))
             .navigationBarItems(
-                leading: Button("Back") {
+                trailing: Button(NSLocalizedString("Back", comment: "")) {
                     showingChangeUserName = false
                 }
             )

@@ -20,12 +20,12 @@ struct ChangeEmailView: View {
     var body: some View {
         NavigationView {
             VStack {
-                TextFieldStyleView(title: "New Email", text: $newEmail, isSecure: false)
+                TextFieldStyleView(title: NSLocalizedString("New Email", comment: ""), text: $newEmail, isSecure: false)
                 Spacer()
                 Button(action: {
                     if newEmail.count < 1 {
                         showError = true
-                        errorMessage = "New user name should be at least 1 characters long."
+                        errorMessage = NSLocalizedString("Email cannot be empty!", comment: "")
                     } else {
                         Task {
                             do {
@@ -41,7 +41,7 @@ struct ChangeEmailView: View {
                         }
                     }
                 }) {
-                    Text("Сохранить")
+                    Text(NSLocalizedString("Save", comment: ""))
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
@@ -52,11 +52,11 @@ struct ChangeEmailView: View {
             }
             .padding()
             .alert(isPresented: $showError) {
-                Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+                Alert(title: Text(NSLocalizedString("Error", comment: "")), message: Text(errorMessage), dismissButton: .default(Text("OK")))
             }
-            .navigationTitle("Change Email")
+            .navigationTitle(NSLocalizedString("Change Email", comment: ""))
             .navigationBarItems(
-                leading: Button("Back") {
+                trailing: Button(NSLocalizedString("Back", comment: "")) {
                     showingChangeEmail = false
                 }
             )

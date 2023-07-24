@@ -22,17 +22,23 @@ struct ChangePasswordView: View {
     var body: some View {
         NavigationView {
             VStack {
-                TextFieldStyleView(title: "Old Password", text: $oldPassword, isSecure: true)
-                TextFieldStyleView(title: "New Password", text: $newPassword, isSecure: true)
-                TextFieldStyleView(title: "Confirm New Password", text: $confirmPassword, isSecure: true)
+//                Text(NSLocalizedString("Password", comment: ""))
+//                    .lineLimit(2)
+//                    .frame(maxWidth: .infinity, alignment: .leading)
+//                    .font(.title)
+//                    .bold()
+//                Text("")
+                TextFieldStyleView(title: NSLocalizedString("Old password", comment: ""), text: $oldPassword, isSecure: true)
+                TextFieldStyleView(title: NSLocalizedString("New password", comment: ""), text: $newPassword, isSecure: true)
+                TextFieldStyleView(title: NSLocalizedString("Confirm new password", comment: ""), text: $confirmPassword, isSecure: true)
                 Spacer()
                 Button(action: {
                     if newPassword.count < 8 {
                         showError = true
-                        errorMessage = "New password should be at least 8 characters long."
+                        errorMessage = NSLocalizedString("New password should be at least 8 characters!", comment: "")
                     } else if newPassword != confirmPassword {
                         showError = true
-                        errorMessage = "New password and confirmation do not match."
+                        errorMessage = NSLocalizedString("New password and confirmation do not match.", comment: "")
                     } else {
                         Task {
                             do {
@@ -48,7 +54,7 @@ struct ChangePasswordView: View {
                         }
                     }
                 }) {
-                    Text("Сохранить")
+                    Text(NSLocalizedString("Save", comment: ""))
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
@@ -59,11 +65,11 @@ struct ChangePasswordView: View {
             }
             .padding()
             .alert(isPresented: $showError) {
-                Alert(title: Text("Error"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+                Alert(title: Text(NSLocalizedString("Error", comment: "")), message: Text(errorMessage), dismissButton: .default(Text("OK")))
             }
-            .navigationTitle("Change Password")
+            .navigationTitle(NSLocalizedString("Update password", comment: ""))
             .navigationBarItems(
-                leading: Button("Back") {
+                trailing: Button(NSLocalizedString("Back", comment: "")) {
                     showingChangePassword = false
                 }
             )

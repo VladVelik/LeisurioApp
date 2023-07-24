@@ -13,16 +13,20 @@ final class RestDetailViewModel: ObservableObject {
     @Published var finalRestMood = 3
     @Published var isSaved = false
     
+    @Published var showToast: Bool = false
+    @Published var toastMessage: String = ""
+    @Published var toastImage: String = ""
+    
     func getStatusText(from symbolName: String) -> String {
         switch symbolName {
         case "hourglass.bottomhalf.filled":
-            return "В ожидании"
+            return NSLocalizedString("Waiting", comment: "")
         case "hourglass":
-            return "В процессе"
+            return NSLocalizedString("In progress", comment: "")
         case "hourglass.tophalf.filled":
-            return "Завершено"
+            return NSLocalizedString("Finished", comment: "")
         default:
-            return "Неизвестный статус"
+            return "Undefined"
         }
     }
     
@@ -30,9 +34,9 @@ final class RestDetailViewModel: ObservableObject {
         mood.wrappedValue = index
     }
     
-    func updateRest(rest: Rest, preRestMood: Int, postRestMood: Int, finalRestMood: Int) async {
+    func updateRest(rest: Rest, preRestMood: Int, postRestMood: Int, finalRestMood: Int) async -> Rest? {
         do {
-            try await updateRest(
+            let updatedRest = try await updateRest(
                 restId: rest.restId,
                 startDate: rest.startDate,
                 endDate: rest.endDate,
@@ -45,12 +49,18 @@ final class RestDetailViewModel: ObservableObject {
             )
 
             DispatchQueue.main.async {
-                self.isSaved = true
+                self.toastMessage = NSLocalizedString("Rate saved!", comment: "")
+                self.toastImage = "checkmark.square"
+                self.showToast = true
             }
+
+            return updatedRest
         } catch {
-            isSaved = false
+            print("Failed to update rest: \(error)")
+            return nil
         }
     }
+
     
     func toggleIsSaved() {
         isSaved = false
@@ -66,7 +76,7 @@ final class RestDetailViewModel: ObservableObject {
         postRestMood: Int,
         finalRestMood: Int,
         isRated: Bool
-    ) async throws {
+    ) async throws -> Rest {
         let updatedRest = Rest(
             restId: restId,
             startDate: startDate,
@@ -86,6 +96,8 @@ final class RestDetailViewModel: ObservableObject {
         } catch {
             print("Failed to update rest: \(error)")
         }
+        
+        return updatedRest
     }
     
     func getHourglassSymbol(for rest: Rest) -> String {

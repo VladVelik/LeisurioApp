@@ -55,7 +55,7 @@ final class CreateRestViewModel: ObservableObject {
         postRestMood: Int = 3,
         finalRestMood: Int = 3,
         isRated: Bool = false
-    ) async throws {
+    ) async throws -> Rest {
         let newRest = Rest(
             restId: restId,
             startDate: startDate,
@@ -77,5 +77,7 @@ final class CreateRestViewModel: ObservableObject {
         } catch {
             print("Failed to add rest: \(error)")
         }
+        
+        return newRest
     }
 }

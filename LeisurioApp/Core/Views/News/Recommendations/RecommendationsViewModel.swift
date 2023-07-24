@@ -9,7 +9,7 @@ import SwiftUI
 
 class RecommendationsViewModel: ObservableObject, ListViewModel {
     @Published var items: [NewsModel] = []
-    @Published var text = "Рекомендаций нет"
+    @Published var text = Texts.RecommendationsController.noRecommendations
     
     private var didLoadNotifications = false
 
@@ -34,7 +34,7 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
         Task {
             do {
                 DispatchQueue.main.async {
-                    self.text = "  загрузка рекомендаций..."
+                    self.text = Texts.RecommendationsController.loadingRecommendations
                 }
                 self.userId = try await fetchUserUid()
                 let calendar = Calendar.current
@@ -45,7 +45,7 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
                 await self.updateNotifications(with: rests)
                 self.didLoadNotifications = true
                 DispatchQueue.main.async {
-                    self.text = "Уведомлений нет"
+                    self.text = Texts.RecommendationsController.noRecommendations
                 }
             } catch {
                 print("Failed to get rests: \(error)")
@@ -77,13 +77,17 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
     }
 
     private func checkRestTypeNotUsed(recentRests: [Rest], currentDate: Date) {
-        let restTypes = ["игры", "спорт", "хобби", "общение", "прогулки"]
+        let restTypes = [NSLocalizedString("Игры", comment: ""),
+                         NSLocalizedString("Спорт", comment: ""),
+                         NSLocalizedString("Хобби", comment: ""),
+                         NSLocalizedString("Общение", comment: ""),
+                         NSLocalizedString("Прогулки", comment: "")]
         
         for type in restTypes {
             let recentRestsOfType = recentRests.filter { $0.restType == type }
-            
+            //var typ = NSLocalizedString(type, comment: "")
             if recentRestsOfType.isEmpty {
-                self.items.append(NewsModel(title: "Не забудьте про тип отдыха!", text: "Вы уже более 5 дней не выбирали \(type)!"))
+                self.items.append(NewsModel(title: Texts.RecommendationsController.dontForgetRestType, text: String(format: Texts.RecommendationsController.restTypeDescription, type)))
             }
         }
     }
@@ -92,7 +96,7 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
         let recentRestTypes = Set(recentRests.map { $0.restType })
         
         if recentRestTypes.count < 2 {
-            self.items.append(NewsModel(title: "Нужен разнообразный отдых", text: "В последние пять дней вы отдыхали только одним способом. Попробуйте что-то новое!"))
+            self.items.append(NewsModel(title: Texts.RecommendationsController.variedRestNeeded, text: Texts.RecommendationsController.oneRestTypeOnly))
         }
     }
 
@@ -109,7 +113,7 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
         }
         
         if overlappingRests {
-            self.items.append(NewsModel(title: "Ваши отдыхи пересекаются", text: "Некоторые из ваших отдыхов пересекаются по времени. Попробуйте уделить внимание планированию своего времени."))
+            self.items.append(NewsModel(title: Texts.RecommendationsController.overlappingRests, text: Texts.RecommendationsController.overlappingRestsDescription))
         }
     }
 
@@ -126,7 +130,7 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
         }
         
         if longRest {
-            self.items.append(NewsModel(title: "Длинный отдых", text: "Один из ваших отдыхов длиннее 12 часов. Постарайтесь разбивать длинные активности на более мелкие."))
+            self.items.append(NewsModel(title: Texts.RecommendationsController.longRest, text: Texts.RecommendationsController.longRestDescription))
         }
     }
 
@@ -144,9 +148,9 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
         let standardDeviation = sqrt(variance)
         
         if standardDeviation <= meanTime * 0.2 {
-            self.items.append(NewsModel(title: "Отличное равномерное распределение времени отдыха!", text: "Ваше время отдыха равномерно распределено по разным видам активности. Продолжайте в том же духе!"))
+            self.items.append(NewsModel(title: Texts.RecommendationsController.excellentRestDistribution, text: Texts.RecommendationsController.excellentRestDistributionDescription))
         } else {
-            self.items.append(NewsModel(title: "Нужно более равномерное распределение времени отдыха", text: "Попробуйте распределить свое время отдыха более равномерно между разными видами активности."))
+            self.items.append(NewsModel(title: Texts.RecommendationsController.moreUniformRestDistributionNeeded, text: Texts.RecommendationsController.moreUniformRestDistributionNeededDescription))
         }
     }
 
@@ -167,29 +171,44 @@ class RecommendationsViewModel: ObservableObject, ListViewModel {
         let meanAfterRestRating = afterRestRatings.reduce(0, +) / afterRestRatings.count
         
         if meanBeforeRestRating > meanAfterRestRating {
-            self.items.append(NewsModel(title: "Ваши оценки в среднем ухудшаются после отдыха", text: "Обратите внимание, что ваши оценки самочувствия ухудшаются после отдыха. Попробуйте изменить вид отдыха или его продолжительность."))
+            self.items.append(NewsModel(title: Texts.RecommendationsController.moodWorsensAfterRest, text: Texts.RecommendationsController.moodWorsensAfterRestDescription))
         }
     }
     
     private func computeRestDaysStreak(rests: [Rest], timeZone: TimeZone = TimeZone.current) -> Int {
         var calendar = Calendar.current
         calendar.timeZone = timeZone
-        var currentDate = calendar.startOfDay(for: Date())
-
-        var streak = 0
-        for _ in 0..<30 {
-            if rests.first(where: { calendar.isDate($0.startDate, inSameDayAs: currentDate) }) != nil {
-                streak += 1
-                currentDate = calendar.date(byAdding: .day, value: -1, to: currentDate)!
-            } else {
-                print("No rest found on date: \(currentDate)")
-                break
+        
+        var restDays = Set<Date>()
+        for rest in rests {
+            let startDate = calendar.startOfDay(for: rest.startDate)
+            let endDate = calendar.startOfDay(for: rest.endDate)
+            var date = startDate
+            while date <= endDate {
+                restDays.insert(date)
+                date = calendar.date(byAdding: .day, value: 1, to: date)!
             }
         }
-
-        return streak
+        
+        let sortedRestDays = restDays.sorted(by: <)
+        var previousDay: Date? = nil
+        var currentStreak = 1
+        var maxStreak = 1
+        for day in sortedRestDays {
+            if let prevDay = previousDay, calendar.isDate(day, inSameDayAs: calendar.date(byAdding: .day, value: 1, to: prevDay)!) {
+                currentStreak += 1
+                if currentStreak > maxStreak {
+                    maxStreak = currentStreak
+                }
+            } else {
+                currentStreak = 1
+            }
+            previousDay = day
+        }
+        
+        return maxStreak
     }
-
+    
     func delete(at offsets: IndexSet) {
         items.remove(atOffsets: offsets)
     }

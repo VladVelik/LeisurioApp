@@ -34,7 +34,7 @@ final class ProfileViewModel: ObservableObject {
         if let newValue {
             saveProfileImage(item: newValue) {
                 self.isLoadingImage = false
-                self.toastMessage = "Image updated!"
+                self.toastMessage = NSLocalizedString("Profile photo updated!", comment: "")
                 self.toastImage = "checkmark.square"
                 self.showToast = true
             }

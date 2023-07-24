@@ -49,7 +49,7 @@ struct PieChart: View {
                     let startAngle = self.startAngle(for: index)
                     let endAngle = self.endAngle(for: index)
                     if data[index].restMinutes > 0 {
-                        Text("\(data[index].label)")
+                        Text(NSLocalizedString("\(data[index].label)", comment: ""))
                             .position(
                                 x: geometry.size.center.x + geometry.size.radius * 0.8 * cos(startAngle.radians + (endAngle.radians - startAngle.radians)/2),
                                       

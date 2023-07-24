@@ -55,7 +55,7 @@ struct RestDetailView: View {
                 Text("\(timeFormatter.string(from: rest.startDate)) - \(timeFormatter.string(from: rest.endDate))")
                     .font(.subheadline)
                     .foregroundColor(.gray)
-                Text("Тип отдыха: \(rest.restType)")
+                Text("\(NSLocalizedString("Leisure type: ", comment: "")) \(NSLocalizedString("\(rest.restType)", comment: ""))")
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }
@@ -77,21 +77,23 @@ struct RestDetailView: View {
                     .padding(.top, 15)
                 
                 if symbolName == "hourglass.tophalf.filled" {
-                    moodSelectionView(for: "Ваше настроение до отдыха:", mood: $restDetailViewModel.preRestMood)
-                    moodSelectionView(for: "Ваше настроение после отдыха:", mood: $restDetailViewModel.postRestMood)
-                    moodSelectionView(for: "Насколько вы удовлетворены отдыхом?", mood: $restDetailViewModel.finalRestMood)
+                    moodSelectionView(for: NSLocalizedString("Your mood before leisure:", comment: ""), mood: $restDetailViewModel.preRestMood)
+                    moodSelectionView(for: NSLocalizedString("Your mood after leisure:", comment: ""), mood: $restDetailViewModel.postRestMood)
+                    moodSelectionView(for: NSLocalizedString("Rate the leisure:", comment: ""), mood: $restDetailViewModel.finalRestMood)
                     
                     Button(action: {
                         Task {
-                            await restDetailViewModel.updateRest(
+                            if let updatedRest = await restDetailViewModel.updateRest(
                                 rest: rest,
                                 preRestMood: restDetailViewModel.preRestMood,
                                 postRestMood: restDetailViewModel.postRestMood,
                                 finalRestMood: restDetailViewModel.finalRestMood
-                            )
+                            ) {
+                                await mainViewModel.updateRest(updatedRest)
+                            }
                         }
                     }) {
-                        Text(restDetailViewModel.isSaved ? "Сохранено" : "Сохранить")
+                        Text(NSLocalizedString("Save", comment: ""))
                             .font(.headline)
                             .foregroundColor(.white)
                             .padding()
@@ -99,20 +101,21 @@ struct RestDetailView: View {
                             .background(Color.blue)
                             .cornerRadius(10)
                     }
-                    .disabled(restDetailViewModel.isSaved)
                 }
             }
             .padding()
-            .navigationBarTitle("Информация об отдыхе", displayMode: .inline)
-            .onDisappear {
-                if restDetailViewModel.isSaved {
-                    Task {
-                        try await mainViewModel.updateData()
-                    }
-                }
-                restDetailViewModel.toggleIsSaved()
-            }
+            .navigationBarTitle(NSLocalizedString("Leisure information", comment: ""), displayMode: .inline)
         }
+        .overlay(
+            overlayView:
+                ToastView(toast:
+                            Toast(
+                                title: restDetailViewModel.toastMessage,
+                                image: restDetailViewModel.toastImage),
+                          show: $restDetailViewModel.showToast
+                         ),
+            show: $restDetailViewModel.showToast
+        )
         .onAppear {
             restDetailViewModel.preRestMood = rest.preRestMood
             restDetailViewModel.postRestMood = rest.postRestMood

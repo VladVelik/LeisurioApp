@@ -13,8 +13,8 @@ struct NewsView: View {
     var body: some View {
         VStack {
             Picker("", selection: $currentPage) {
-                Text("Уведомления").tag(0)
-                Text("Рекомендации").tag(1)
+                Text(NSLocalizedString("Notifications", comment: "")).tag(0)
+                Text(NSLocalizedString("Recommendations", comment: "")).tag(1)
             }
             .pickerStyle(SegmentedPickerStyle())
             .padding()

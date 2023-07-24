@@ -53,7 +53,7 @@ final class MainViewModel: ObservableObject {
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "d MMMM"
-        formatter.locale = Locale(identifier: "ru_RU")
+        
         return formatter
     }()
     
@@ -102,7 +102,6 @@ final class MainViewModel: ObservableObject {
     }
     
     func getRestsForSelectedDate(userId: String) async throws {
-        print("\(NotificationManager.shared.getSavedNotifications())")
         DispatchQueue.main.async {
             self.isLoading = true
         }
@@ -125,6 +124,14 @@ final class MainViewModel: ObservableObject {
         }
     }
     
+    func updateRest(_ rest: Rest) async {
+        DispatchQueue.main.async {
+            if let index = self.restsForSelectedDate.firstIndex(where: { $0.restId == rest.restId }) {
+                self.restsForSelectedDate[index] = rest
+            }
+        }
+    }
+
     var sortedRestsForSelectedDate: [(index: Int, rest: Rest)] {
         let calendar = Calendar.current
         return restsForSelectedDate.enumerated().sorted { item1, item2 in
@@ -177,7 +184,7 @@ final class MainViewModel: ObservableObject {
         restTimers.removeAll()
     }
     
-    private func setRestTimers(for rests: [Rest]) {
+    func setRestTimers(for rests: [Rest]) {
         for rest in rests {
             let startTimer = Timer(fire: rest.startDate, interval: 0, repeats: false) { [weak self] _ in
                 DispatchQueue.main.async {
@@ -191,7 +198,11 @@ final class MainViewModel: ObservableObject {
             }
             RunLoop.main.add(startTimer, forMode: .default)
             RunLoop.main.add(endTimer, forMode: .default)
-            restTimers.append(contentsOf: [startTimer, endTimer])
+            
+            DispatchQueue.main.async {
+                self.restTimers.append(contentsOf: [startTimer, endTimer])
+            }
+
         }
     }
 }

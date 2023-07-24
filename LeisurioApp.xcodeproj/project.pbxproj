@@ -65,6 +65,7 @@
 		6F63D57C2A6AD09800786FC8 /* TextFieldStyleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F63D57B2A6AD09800786FC8 /* TextFieldStyleView.swift */; };
 		6F63D57E2A6AD0E700786FC8 /* ChangeUserNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F63D57D2A6AD0E700786FC8 /* ChangeUserNameView.swift */; };
 		6F63D5802A6AE74500786FC8 /* ChangeEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F63D57F2A6AE74500786FC8 /* ChangeEmailView.swift */; };
+		6F6A8AB62A6EB5C600BC1D63 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F6A8AB82A6EB5C600BC1D63 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -118,6 +119,8 @@
 		6F63D57B2A6AD09800786FC8 /* TextFieldStyleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldStyleView.swift; sourceTree = "<group>"; };
 		6F63D57D2A6AD0E700786FC8 /* ChangeUserNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeUserNameView.swift; sourceTree = "<group>"; };
 		6F63D57F2A6AE74500786FC8 /* ChangeEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeEmailView.swift; sourceTree = "<group>"; };
+		6F6A8AB72A6EB5C600BC1D63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6F6A8AB92A6EB5CB00BC1D63 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +175,7 @@
 				240428F32A139CB00019FBB5 /* GoogleService-Info.plist */,
 				240428E92A13991C0019FBB5 /* Assets.xcassets */,
 				240428EB2A13991C0019FBB5 /* Preview Content */,
+				6F6A8AB82A6EB5C600BC1D63 /* Localizable.strings */,
 			);
 			path = LeisurioApp;
 			sourceTree = "<group>";
@@ -443,6 +447,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 240428D92A1399140019FBB5;
 			packageReferences = (
@@ -466,6 +471,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				240428ED2A13991C0019FBB5 /* Preview Assets.xcassets in Resources */,
+				6F6A8AB62A6EB5C600BC1D63 /* Localizable.strings in Resources */,
 				240428F42A139CB00019FBB5 /* GoogleService-Info.plist in Resources */,
 				240428EA2A13991C0019FBB5 /* Assets.xcassets in Resources */,
 			);
@@ -527,6 +533,18 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6F6A8AB82A6EB5C600BC1D63 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6F6A8AB72A6EB5C600BC1D63 /* en */,
+				6F6A8AB92A6EB5CB00BC1D63 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		240428EE2A13991C0019FBB5 /* Debug */ = {

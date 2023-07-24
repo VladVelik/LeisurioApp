@@ -15,24 +15,24 @@ struct ScreenView: View {
             MainView()
                 .tabItem {
                     Image(systemName: "house.fill")
-                    //Text("Главная")
+                    Text(NSLocalizedString("Home", comment: ""))
                 }
             StatisticsView()
                 .tabItem {
                     Image(systemName: "chart.bar.xaxis")
-                    //Text("Статистика")
+                    Text(NSLocalizedString("Statistics", comment: ""))
                 }
             NewsView()
                 .tabItem {
                     Image(systemName: "bell.fill")
-                    //Text("Новости")
+                    Text(NSLocalizedString("News", comment: ""))
                 }
             NavigationView {
                 ProfileView(showSignInView: $showSignInView)
             }
                 .tabItem {
                     Image(systemName: "person.crop.circle.fill")
-                    //Text("Профиль")
+                    Text(NSLocalizedString("Profile", comment: ""))
                 }
         }
     }

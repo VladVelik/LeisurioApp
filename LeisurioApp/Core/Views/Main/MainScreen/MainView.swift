@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
-    @StateObject private var viewModel = MainViewModel()
+    @ObservedObject private var viewModel = MainViewModel()
     @State private var isFirstLoad = true
     
     var body: some View {
@@ -18,7 +18,7 @@ struct MainView: View {
                     Button(action: {
                         viewModel.toggleDatePicker()
                     }) {
-                        Text(viewModel.isDatePickerShown ? "Убрать календарь" : "Показать календарь")
+                        Text(viewModel.isDatePickerShown ? NSLocalizedString("Hide calendar", comment: "") : NSLocalizedString("Show calendar", comment: ""))
                     }
 
                     if viewModel.isDatePickerShown {
@@ -32,22 +32,26 @@ struct MainView: View {
                             viewModel.changeDate(by: -1)
                         }) {
                             Image(systemName: "arrow.left")
+                                .scaleEffect(1.5)
+                                
                         }
                         
-                        Text("\(viewModel.selectedDate, formatter: viewModel.dateFormatter)").font(.largeTitle)
+                        Text(" \(viewModel.selectedDate, formatter: viewModel.dateFormatter) ").font(.largeTitle)
                         
                         Button(action: {
                             viewModel.changeDate(by: 1)
                         }) {
                             Image(systemName: "arrow.right")
+                                .scaleEffect(1.5)
                         }
                     }
+                    
                     Spacer()
-                    Button("Добавить отдых") {
+                    
+                    Button(NSLocalizedString("Add leisure", comment: "")) {
                         viewModel.toggleRestView()
                         viewModel.closeDatePicker()
                     }
-                    Spacer()
                     updateListOfRests
                 }
                 .blur(radius: viewModel.isRestViewShown ? 4 : 0)
@@ -83,7 +87,7 @@ extension MainView {
                     HStack {
                         ProgressView()
                             .scaledToFit()
-                        Text("  загрузка событий...")
+                        Text(NSLocalizedString("  loading...", comment: ""))
                     }
                     .id(UUID())
                 } else if !viewModel.restsForSelectedDate.isEmpty {
@@ -98,7 +102,7 @@ extension MainView {
                         viewModel.deleteRest(at: sortedIndex)
                     }
                 } else {
-                    Text("Сегодня событий нет")
+                    Text(NSLocalizedString("No events today", comment: ""))
                 }
             }
             .overlay(

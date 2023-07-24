@@ -10,7 +10,7 @@ import SwiftUI
 struct RestView: View {
     let sortedIndex: Int
     let rest: Rest
-    let viewModel: MainViewModel
+    @ObservedObject var viewModel: MainViewModel
 
     var body: some View {
         VStack {

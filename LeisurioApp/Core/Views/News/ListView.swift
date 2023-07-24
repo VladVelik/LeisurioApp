@@ -25,7 +25,7 @@ struct ListView<ViewModel: ObservableObject & ListViewModel, Content: View>: Vie
                 ScrollView {
                     
                     HStack {
-                        if (viewModel.text != "Уведомлений нет") {
+                        if (!viewModel.text.contains(NSLocalizedString("yet", comment: ""))) {
                             ProgressView()
                         }
                         Text("\(viewModel.text)")

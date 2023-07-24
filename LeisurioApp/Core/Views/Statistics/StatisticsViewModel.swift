@@ -52,8 +52,8 @@ class StatisticsViewModel: ObservableObject {
     }
 
     enum Timeframe: String, CaseIterable, Identifiable {
-        case week = "неделя"
-        case month = "месяц"
+        case week = "week"
+        case month = "month"
         
         var id: String {
             self.rawValue
@@ -62,7 +62,17 @@ class StatisticsViewModel: ObservableObject {
         var durationInDays: Int {
             self == .week ? 7 : 30
         }
+        
+        var displayName: String {
+            switch self {
+            case .week:
+                return NSLocalizedString("week", comment: "")
+            case .month:
+                return NSLocalizedString("month", comment: "")
+            }
+        }
     }
+
 
     private let calendar = Calendar.current
     

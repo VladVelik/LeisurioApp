@@ -13,15 +13,15 @@ struct CreateRestView: View {
     
     var body: some View {
         VStack {
-            Text("Добавить отдых")
+            Text(NSLocalizedString("Add leisure", comment: ""))
                 .font(.headline)
-            DatePicker("Начало отдыха:", selection: $createRestViewModel.startTime, displayedComponents: .hourAndMinute)
+            DatePicker(NSLocalizedString("Leisure start:", comment: ""), selection: $createRestViewModel.startTime, displayedComponents: .hourAndMinute)
                 .datePickerStyle(DefaultDatePickerStyle())
-            DatePicker("Окончание отдыха:", selection: $createRestViewModel.endTime, displayedComponents: .hourAndMinute)
+            DatePicker(NSLocalizedString("Leisure end:", comment: ""), selection: $createRestViewModel.endTime, displayedComponents: .hourAndMinute)
                 .datePickerStyle(DefaultDatePickerStyle())
-            TextFieldStyleView(title: "Заметка об отдыхе", text: $createRestViewModel.restNote, isSecure: false)
+            TextFieldStyleView(title: NSLocalizedString("Leisure note", comment: ""), text: $createRestViewModel.restNote, isSecure: false)
                 .padding(.top, 20)
-            Text("Выбор категории:")
+            Text(NSLocalizedString("Category selection", comment: ""))
             VStack {
                 HStack {
                     ForEach(mainViewModel.categories.prefix(3), id: \.name) { category in
@@ -47,14 +47,14 @@ struct CreateRestView: View {
             Button(action: {
                 mainViewModel.toggleRestView()
             }) {
-                Text("Назад")
+                Text(NSLocalizedString("Back", comment: ""))
             }
             Spacer()
-            Button("Далее") {
+            Button(NSLocalizedString("Next", comment: "")) {
                 let fullStartTime = createRestViewModel.mergeDateAndTime(date: mainViewModel.selectedDate, time: createRestViewModel.startTime)
                 let fullEndTime = createRestViewModel.mergeDateAndTime(date: mainViewModel.selectedDate, time: createRestViewModel.endTime)
                 Task {
-                    try await createRestViewModel.addNewRest(
+                    let newRest = try await createRestViewModel.addNewRest(
                         restId: UUID().uuidString,
                         startDate: fullStartTime,
                         endDate: fullEndTime,
@@ -62,11 +62,14 @@ struct CreateRestView: View {
                         restType: createRestViewModel.selectedCategory
                     )
                     
-                    self.mainViewModel.toastMessage = "Rest added!"
-                    self.mainViewModel.toastImage = "checkmark.square"
-                    self.mainViewModel.showToast = true
+                    DispatchQueue.main.async {
+                        self.mainViewModel.restsForSelectedDate.append(newRest)
+                        self.mainViewModel.toastMessage = NSLocalizedString("Leisure added!", comment: "")
+                        self.mainViewModel.toastImage = "checkmark.square"
+                        self.mainViewModel.showToast = true
+                    }
                     
-                    try await mainViewModel.updateData()
+                    mainViewModel.setRestTimers(for: [newRest])
                 }
                 mainViewModel.toggleRestView()
             }
@@ -81,14 +84,16 @@ struct CreateRestView: View {
         }) {
             VStack {
                 Image(systemName: category.imageName)
-                Text(category.name)
+                    .scaleEffect(1.5)
+                Text("")
+                Text(NSLocalizedString("\(category.name)", comment: ""))
                     .font(.caption)
             }
-            .frame(width: 70, height: 70)
+            .frame(width: 90, height: 90)
             .background(createRestViewModel.selectedCategory == category.name ? Color.green : Color.gray)
             .foregroundColor(.white)
-            .cornerRadius(10)
-            .padding(10)
+            .cornerRadius(15)
+            .padding(2)
         }
     }
 }

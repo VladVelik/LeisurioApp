@@ -32,7 +32,7 @@ struct SettingsView: View {
                 try await viewModel.loadCurrentUser()
             }
         }
-        .navigationTitle("Settings")
+        .navigationTitle(NSLocalizedString("Settings", comment: ""))
         .overlay(
             overlayView:
                 ToastView(toast:
@@ -49,26 +49,26 @@ struct SettingsView: View {
 extension SettingsView {
     private var emailSection: some View {
         Section {
-            Button("Update Password") {
+            Button(NSLocalizedString("Update password", comment: "")) {
                 showingChangePassword = true
             }
             .sheet(isPresented: $showingChangePassword) {
                 ChangePasswordView(showingChangePassword: $showingChangePassword, completion: { success in
                     if success {
-                        self.viewModel.toastMessage = "Password updated!"
+                        self.viewModel.toastMessage = NSLocalizedString("Password updated!", comment: "")
                         self.viewModel.toastImage = "checkmark.square"
                         self.viewModel.showToast = true
                     }
                 }, viewModel: viewModel)
             }
             
-            Button("Update email") {
+            Button(NSLocalizedString("Update email", comment: "")) {
                 showingChangeEmail = true
             }
             .sheet(isPresented: $showingChangeEmail) {
                 ChangeEmailView(showingChangeEmail: $showingChangeEmail, completion: { success in
                     if success {
-                        self.viewModel.toastMessage = "Email updated!"
+                        self.viewModel.toastMessage = NSLocalizedString("Email updated!", comment: "")
                         self.viewModel.toastImage = "checkmark.square"
                         self.viewModel.showToast = true
                     }
@@ -82,26 +82,26 @@ extension SettingsView {
     
     var userNameSection: some View {
         Section {
-            Button("Update Username") {
+            Button(NSLocalizedString("Update Username", comment: "")) {
                 showingChangeUserName = true
             }
             .sheet(isPresented: $showingChangeUserName) {
                 ChangeUserNameView(showingChangeUserName: $showingChangeUserName, completion: { success in
                     if success {
-                        self.viewModel.toastMessage = "Username updated!"
+                        self.viewModel.toastMessage = NSLocalizedString("Username updated!", comment: "")
                         self.viewModel.toastImage = "checkmark.square"
                         self.viewModel.showToast = true
                     }
                 }, viewModel: viewModel)
             }
         } header: {
-            Text("Username")
+            Text(NSLocalizedString("Username", comment: ""))
         }
     }
     
     private var accountSection: some View {
         Section {
-            Button("Log out") {
+            Button(NSLocalizedString("Log out", comment: "")) {
                 Task {
                     do {
                         try viewModel.signOut()
@@ -122,10 +122,10 @@ extension SettingsView {
                     }
                 }
             } label: {
-                Text("Delete account")
+                Text(NSLocalizedString("Delete account", comment: ""))
             }
         } header: {
-            Text("Account")
+            Text(NSLocalizedString("Account", comment: ""))
         }
     }
 }

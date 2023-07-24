@@ -17,7 +17,7 @@ struct ProfileView: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text("Профиль")
+                Text(NSLocalizedString("Profile", comment: ""))
                     .fontWeight(.bold)
                     .font(.title)
                 
@@ -77,12 +77,12 @@ struct ProfileView: View {
             
             HStack {
                 drawRoundedRectangleView(
-                    title: "Дата регистрации",
+                    title: NSLocalizedString("Registration date", comment: ""),
                     text: viewModel.user?.dateCreated?.formatted(.dateTime.year().month().day()) ?? ""
                 )
                 
                 drawRoundedRectangleView(
-                    title: "Количество активностей",
+                    title: NSLocalizedString("Number of leisures", comment: ""),
                     text: "\(viewModel.user?.rests.count ?? 0)"
                 )
             }
