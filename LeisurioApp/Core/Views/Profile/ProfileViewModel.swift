@@ -12,9 +12,8 @@ final class ProfileViewModel: ObservableObject {
     @Published var user: DBUser? = nil
     @Published var imageUrl: String? = nil
     
-    @State var isImagePickerPresented = false
+    @Published var isImagePickerPresented = false
     @Published var isLoadingImage = false
-    @State var username: String = ""
     
     @Published var showToast: Bool = false
     @Published var toastMessage: String = ""

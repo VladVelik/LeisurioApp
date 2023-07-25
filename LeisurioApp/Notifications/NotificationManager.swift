@@ -25,13 +25,21 @@ class NotificationManager {
         }
     }
     
-    func scheduleNotification(restId: String, startDate: Date, endDate: Date, note: String) {
+    func scheduleNotification(restId: String, startDate: Date, notificationOffset: TimeInterval, note: String) {
         let content = UNMutableNotificationContent()
         content.title = "Leisurio"
-        content.body = "Don't forget about \(note)!"
+        
+        let minutesUntilEvent = notificationOffset / 60
+        
+        let timeUntilEventString: String
+        
+        timeUntilEventString = String(format: "%.0f", minutesUntilEvent)
+        
+        content.body = String(format: NSLocalizedString("Don't forget about %@! This leisure will start in just %@ minutes!", comment: ""), note, timeUntilEventString)
         content.sound = UNNotificationSound.default
-
-        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: startDate)
+        
+        let notificationDate = startDate.addingTimeInterval(-notificationOffset)
+        let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: notificationDate)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
         
         let request = UNNotificationRequest(identifier: restId, content: content, trigger: trigger)
@@ -41,9 +49,10 @@ class NotificationManager {
             }
         }
     }
+
     
-    func saveNotification(restId: String, startDate: Date, endDate: Date, note: String) {
-        let notification = ["restId": restId, "startDate": startDate, "endDate": endDate, "note": note] as [String : Any]
+    func saveNotification(restId: String, startDate: Date, notificationOffset: TimeInterval, note: String) {
+        let notification = ["restId": restId, "startDate": startDate, "notificationOffset": notificationOffset, "note": note] as [String : Any]
         let currentNotifications = getSavedNotifications()
         var newNotifications = currentNotifications
         newNotifications.append(notification)

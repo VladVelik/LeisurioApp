@@ -9,7 +9,7 @@ import SwiftUI
 import PhotosUI
 
 struct ProfileView: View {
-    @StateObject private var viewModel = ProfileViewModel()
+    @ObservedObject private var viewModel = ProfileViewModel()
     @Binding var showSignInView: Bool
     
     @State var selectedItem: PhotosPickerItem? = nil

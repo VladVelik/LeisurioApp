@@ -71,9 +71,6 @@ final class CreateRestViewModel: ObservableObject {
             let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
             try await UserManager.shared.addRestToUser(userId: authDataResult.uid, rest: newRest)
             print("Rest added successfully")
-            
-            NotificationManager.shared.saveNotification(restId: restId, startDate: startDate, endDate: endDate, note: keyword)
-            NotificationManager.shared.scheduleNotification(restId: restId, startDate: startDate, endDate: endDate, note: keyword)
         } catch {
             print("Failed to add rest: \(error)")
         }

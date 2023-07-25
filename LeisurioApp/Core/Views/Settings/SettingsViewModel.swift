@@ -34,6 +34,10 @@ final class SettingsViewModel: ObservableObject {
     func signOut() throws {
         try AuthenticationManager.shared.signOut()
         NotificationManager.shared.removeAllNotifications()
+        let domain = Bundle.main.bundleIdentifier!
+        UserDefaults.standard.removePersistentDomain(forName: domain)
+        UserDefaults.standard.synchronize()
+
     }
     
     func deleteAccount() async throws {

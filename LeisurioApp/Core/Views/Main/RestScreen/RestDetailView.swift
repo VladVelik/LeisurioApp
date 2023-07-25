@@ -9,15 +9,18 @@ import SwiftUI
 
 struct RestDetailView: View {
     @StateObject var mainViewModel: MainViewModel
-    @StateObject var restDetailViewModel = RestDetailViewModel()
-    
-    let rest: Rest
-    let timeFormatter: DateFormatter
-    
+    @StateObject var restDetailViewModel: RestDetailViewModel
+
     private var symbolName: String {
-        restDetailViewModel.getHourglassSymbol(for: rest)
+        restDetailViewModel.getHourglassSymbol(for: restDetailViewModel.rest)
     }
     
+    init(mainViewModel: MainViewModel, rest: Rest, timeFormatter: DateFormatter) {
+        self._mainViewModel = StateObject(wrappedValue: mainViewModel)
+        let storedNotificationOption = UserDefaults.standard.string(forKey: "notificationOption_\(rest.restId)") ?? "Don`t notify"
+        self._restDetailViewModel = StateObject(wrappedValue: RestDetailViewModel(rest: rest, timeFormatter: timeFormatter, storedNotificationOption: storedNotificationOption))
+    }
+
     private func moodSelectionView(for title: String, mood: Binding<Int>) -> some View {
         VStack {
             Divider()
@@ -38,7 +41,7 @@ struct RestDetailView: View {
             }
         }
     }
-    
+
     private func mainRestInfoView() -> some View {
         HStack {
             VStack(alignment: .leading, spacing: 10) {
@@ -52,27 +55,32 @@ struct RestDetailView: View {
                         .font(.headline)
                         .foregroundColor(.gray)
                 }
-                Text("\(timeFormatter.string(from: rest.startDate)) - \(timeFormatter.string(from: rest.endDate))")
+                Text("\(restDetailViewModel.timeFormatter.string(from: restDetailViewModel.rest.startDate)) - \(restDetailViewModel.timeFormatter.string(from: restDetailViewModel.rest.endDate))")
                     .font(.subheadline)
                     .foregroundColor(.gray)
-                Text("\(NSLocalizedString("Leisure type: ", comment: "")) \(NSLocalizedString("\(rest.restType)", comment: ""))")
+                Text("\(NSLocalizedString("Leisure type: ", comment: "")) \(NSLocalizedString("\(restDetailViewModel.rest.restType)", comment: ""))")
                     .font(.subheadline)
                     .foregroundColor(.gray)
+                if !restDetailViewModel.isPastEvent() {
+                    Text(NSLocalizedString("\(restDetailViewModel.selectedNotification)", comment: ""))
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
             }
             Spacer()
-            Image(systemName: mainViewModel.getSymbolName(from: rest.restType) ?? "ellipsis.circle.fill")
+            Image(systemName: mainViewModel.getSymbolName(from: restDetailViewModel.rest.restType) ?? "ellipsis.circle.fill")
                 .resizable()
                 .scaledToFit()
                 .frame(height: 80)
         }
     }
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
                 mainRestInfoView()
                 
-                Text(rest.keyword)
+                Text(restDetailViewModel.rest.keyword)
                     .font(.title)
                     .padding(.top, 15)
                 
@@ -84,7 +92,7 @@ struct RestDetailView: View {
                     Button(action: {
                         Task {
                             if let updatedRest = await restDetailViewModel.updateRest(
-                                rest: rest,
+                                rest: restDetailViewModel.rest,
                                 preRestMood: restDetailViewModel.preRestMood,
                                 postRestMood: restDetailViewModel.postRestMood,
                                 finalRestMood: restDetailViewModel.finalRestMood
@@ -105,6 +113,31 @@ struct RestDetailView: View {
             }
             .padding()
             .navigationBarTitle(NSLocalizedString("Leisure information", comment: ""), displayMode: .inline)
+            .navigationBarItems(trailing:
+                                    Group {
+                if !restDetailViewModel.isPastEvent() {
+                    Button(action: {
+                        restDetailViewModel.showNotificationOptions = true
+                    }) {
+                        Image(systemName: restDetailViewModel.selectedNotification == "Don`t notify" ? "bell.slash" : "bell")
+                    }
+                    .actionSheet(isPresented: $restDetailViewModel.showNotificationOptions) {
+                        ActionSheet(title: Text(NSLocalizedString("Notification", comment: "")), message: Text(NSLocalizedString("Choose a notification time", comment: "")), buttons: restDetailViewModel.notificationOptions.map { option in
+                                .default(Text(NSLocalizedString(option, comment: ""))) {
+                                    restDetailViewModel.selectedNotification = option
+                                    if restDetailViewModel.selectedNotification != "Don`t notify" {
+                                        restDetailViewModel.scheduleNotificationForRest(restDetailViewModel.rest, with: restDetailViewModel.selectedNotification)
+                                        
+                                        Task {
+                                            await mainViewModel.updateRest(restDetailViewModel.rest)
+                                        }
+                                    }
+                                }
+                        } + [.cancel(Text(NSLocalizedString("Cancel", comment: "")))])
+                    }
+                }
+            }
+            )
         }
         .overlay(
             overlayView:
@@ -117,9 +150,7 @@ struct RestDetailView: View {
             show: $restDetailViewModel.showToast
         )
         .onAppear {
-            restDetailViewModel.preRestMood = rest.preRestMood
-            restDetailViewModel.postRestMood = rest.postRestMood
-            restDetailViewModel.finalRestMood = rest.finalRestMood
+            restDetailViewModel.restMoodInit()
         }
     }
 }

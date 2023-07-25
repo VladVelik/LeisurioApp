@@ -81,3 +81,11 @@
 "New Username" = "Новое имя пользователя";
 "New Email" = "Новый email";
 "Email cannot be empty!" = "Email не может быть пустым!";
+"Notification" = "Уведомление";
+"Choose a notification time" = "Выберите время для уведомления";
+"Notify in 15 minutes" = "Уведомить за 15 минут";
+"Notify in 30 minutes" = "Уведомить за 30 минут";
+"Notify in 1 hour" = "Уведомить за 1 час";
+"Don`t notify" = "Не уведомлять";
+"Cancel" = "Отмена";
+"Don't forget about %@! This leisure will start in just %@ minutes!" = "Не забудьте о %@! Это событие начнется уже через %@ минут!";
