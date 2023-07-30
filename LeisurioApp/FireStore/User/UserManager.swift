@@ -126,4 +126,30 @@ final class UserManager {
 
         try await userDocument(userId: userId).updateData(data)
     }
+    
+    func deleteUser(userId: String) async throws {
+        // Получаем все отдыхи пользователя
+        let allRestsForUser = try await self.getAllRestsForUser(userId: userId)
+
+        // Удаляем все отдыхи пользователя
+        for rest in allRestsForUser {
+            try await RestManager.shared.deleteRest(restId: rest.restId)
+        }
+
+        // Получаем информацию о пользователе
+        let user = try await self.getUser(userId: userId)
+
+        // Если у пользователя есть фото, удаляем его
+        if let photoPath = user.photoPath {
+            try await StorageManager.shared.deleteImage(path: photoPath)
+        }
+
+        // Удаляем информацию о пользователе
+        try await userDocument(userId: userId).delete()
+    }
+    
+    func userExists(user: DBUser) async throws -> Bool {
+        let documentSnapshot = try await userDocument(userId: user.userId).getDocument()
+        return documentSnapshot.exists
+    }
 }

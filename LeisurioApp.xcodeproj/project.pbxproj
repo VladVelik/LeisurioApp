@@ -66,6 +66,8 @@
 		6F63D57E2A6AD0E700786FC8 /* ChangeUserNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F63D57D2A6AD0E700786FC8 /* ChangeUserNameView.swift */; };
 		6F63D5802A6AE74500786FC8 /* ChangeEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F63D57F2A6AE74500786FC8 /* ChangeEmailView.swift */; };
 		6F6A8AB62A6EB5C600BC1D63 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F6A8AB82A6EB5C600BC1D63 /* Localizable.strings */; };
+		6F6A8ABB2A76A27200BC1D63 /* LogInButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6A8ABA2A76A27200BC1D63 /* LogInButtonView.swift */; };
+		6F6A8ABD2A76AE5600BC1D63 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6A8ABC2A76AE5600BC1D63 /* Errors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -121,6 +123,8 @@
 		6F63D57F2A6AE74500786FC8 /* ChangeEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeEmailView.swift; sourceTree = "<group>"; };
 		6F6A8AB72A6EB5C600BC1D63 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F6A8AB92A6EB5CB00BC1D63 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6F6A8ABA2A76A27200BC1D63 /* LogInButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInButtonView.swift; sourceTree = "<group>"; };
+		6F6A8ABC2A76AE5600BC1D63 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,6 +214,7 @@
 				240429112A1508760019FBB5 /* Utilities.swift */,
 				6F63D5772A6ABF9700786FC8 /* ToastView.swift */,
 				6F63D57B2A6AD09800786FC8 /* TextFieldStyleView.swift */,
+				6F6A8ABC2A76AE5600BC1D63 /* Errors.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -243,6 +248,7 @@
 				240429562A1F95F30019FBB5 /* Subviews */,
 				240429002A13F8650019FBB5 /* AuthenticationView.swift */,
 				240429542A1F95B60019FBB5 /* AuthenticationViewModel.swift */,
+				6F6A8ABA2A76A27200BC1D63 /* LogInButtonView.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -493,7 +499,9 @@
 				6F63D5642A5EBF6600786FC8 /* NotificationsViewModel.swift in Sources */,
 				240428E62A1399140019FBB5 /* LeisurioAppApp.swift in Sources */,
 				6F63D5762A66BD8700786FC8 /* StorageManager.swift in Sources */,
+				6F6A8ABD2A76AE5600BC1D63 /* Errors.swift in Sources */,
 				240429622A1F9B3E0019FBB5 /* StatisticsView.swift in Sources */,
+				6F6A8ABB2A76A27200BC1D63 /* LogInButtonView.swift in Sources */,
 				6F63D56A2A617CAA00786FC8 /* NewsElementView.swift in Sources */,
 				240429072A13FB1F0019FBB5 /* RootView.swift in Sources */,
 				240429552A1F95B60019FBB5 /* AuthenticationViewModel.swift in Sources */,

@@ -61,12 +61,14 @@ final class AuthenticationManager {
         try Auth.auth().signOut()
     }
     
-    func delete() async throws {
-        guard let user = Auth.auth().currentUser else {
-            throw URLError(.badURL)
+    func delete() throws {
+        Auth.auth().currentUser?.delete { error in
+          if let error = error {
+            print(error.localizedDescription)
+          } else {
+            print("Success deleting")
+          }
         }
-        
-        try await user.delete()
     }
 }
 
@@ -74,14 +76,40 @@ final class AuthenticationManager {
 extension AuthenticationManager {
     @discardableResult
     func createUser(email: String, password: String) async throws -> AuthDataResultModel {
-        let authData = try await Auth.auth().createUser(withEmail: email, password: password)
-        return AuthDataResultModel(authData.user)
+        do {
+            let authData = try await Auth.auth().createUser(withEmail: email, password: password)
+            return AuthDataResultModel(authData.user)
+        } catch {
+            let nsError = error as NSError
+            switch nsError.code {
+            case AuthErrorCode.emailAlreadyInUse.rawValue:
+                throw SignUpError.emailAlreadyInUse
+            case AuthErrorCode.invalidEmail.rawValue:
+                throw SignUpError.invalidEmail
+            default:
+                throw SignUpError.unknownError
+            }
+        }
     }
     
     @discardableResult
     func signInUser(email: String, password: String) async throws -> AuthDataResultModel {
-        let authData = try await Auth.auth().signIn(withEmail: email, password: password)
-        return AuthDataResultModel(authData.user)
+        do {
+            let authData = try await Auth.auth().signIn(withEmail: email, password: password)
+            return AuthDataResultModel(authData.user)
+        } catch {
+            let nsError = error as NSError
+            switch nsError.code {
+            case AuthErrorCode.userNotFound.rawValue:
+                throw SignInError.userNotFound
+            case AuthErrorCode.wrongPassword.rawValue:
+                throw SignInError.wrongPassword
+            case AuthErrorCode.invalidEmail.rawValue:
+                throw SignInError.badEmail
+            default:
+                throw SignInError.unknownError
+            }
+        }
     }
     
     func resetPassword(email: String) async throws {

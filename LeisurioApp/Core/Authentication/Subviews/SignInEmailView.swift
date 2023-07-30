@@ -7,42 +7,64 @@
 
 import SwiftUI
 
+struct AlertItem: Identifiable {
+    var id = UUID()
+    var title: String
+    var message: String
+}
+
 struct SignInEmailView: View {
     @StateObject private var viewModel = SignInEmailViewModel()
     @Binding var showSignInView: Bool
+    @Binding var isSignIn: Bool
+    
+    @State var alertItem: AlertItem?
     
     var body: some View {
         VStack {
-            TextField("Email...", text: $viewModel.email)
+            Text(isSignIn ? "Sign in with Email" : "Sign up with Email")
+                .font(.largeTitle)
+                .bold()
+                .foregroundColor(.black)
                 .padding()
-                .cornerRadius(10)
-            SecureField("Password...", text: $viewModel.password)
-                .padding()
-                .cornerRadius(10)
+            TextFieldStyleView(title: "Email...", text: $viewModel.email, isSecure: false, color: .white)
+            TextFieldStyleView(title: "Password...", text: $viewModel.password, isSecure: true, color: .white)
+                
             Button {
                 Task {
                     do {
-                        try await viewModel.signUp()
+                        if isSignIn {
+                            try await viewModel.signIn()
+                        } else {
+                            try await viewModel.signUp()
+                        }
                         showSignInView = false
-                        return
-                    } catch {
-                        print(error)
-                    }
-                    
-                    do {
-                        try await viewModel.signIn()
-                        showSignInView = false
-                        return
-                    } catch {
-                        print(error)
+                    } catch let error as LocalizedError {
+                        alertItem = AlertItem(title: "Error", message: error.localizedDescription)
                     }
                 }
             } label: {
-                Text("Sign in")
+                Text(isSignIn ? "Sign in" : "Sign up")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.blue)
+                    .cornerRadius(15)
+            }
+            .alert(item: $alertItem) { alertItem in
+                Alert(title: Text(alertItem.title), message: Text(alertItem.message), dismissButton: .default(Text("OK")))
             }
             Spacer()
         }
         .padding()
-        .navigationTitle("Sign in with Email")
+        .background(
+            Image("background")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .ignoresSafeArea()
+                .offset(x: -UIScreen.main.bounds.width / 6)
+                .opacity(0.3)
+        )
     }
 }

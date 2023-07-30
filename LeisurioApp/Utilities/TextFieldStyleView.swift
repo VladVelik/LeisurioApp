@@ -11,6 +11,7 @@ struct TextFieldStyleView: View {
     var title: String
     @Binding var text: String
     var isSecure: Bool
+    var color = Color(.systemGray)
     
     var body: some View {
         VStack {
@@ -21,7 +22,7 @@ struct TextFieldStyleView: View {
             }
         }
         .padding()
-        .background(Color(.systemGray6))
+        .background(color)
         .cornerRadius(8)
         .padding(.bottom, 10)
     }

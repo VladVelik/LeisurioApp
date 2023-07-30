@@ -16,33 +16,45 @@ struct SettingsView: View {
     @State var showingChangeUserName = false
     @State var showingChangeEmail = false
     
+    @State private var showDeleteConfirmation = false
+    @State private var isDeletingAccount = false
+    
     var body: some View {
-        List {
-            userNameSection
-            
-            if viewModel.authProviders.contains(.email) {
-                emailSection
+        ZStack {
+            List {
+                userNameSection
+                
+                if viewModel.authProviders.contains(.email) {
+                    emailSection
+                }
+                
+                accountSection
             }
+            .onAppear {
+                viewModel.loadAuthProviders()
+                Task {
+                    try await viewModel.loadCurrentUser()
+                }
+            }
+            .navigationTitle(NSLocalizedString("Settings", comment: ""))
+            .overlay(
+                overlayView:
+                    ToastView(toast:
+                                Toast(
+                                    title: viewModel.toastMessage,
+                                    image: viewModel.toastImage),
+                              show: $viewModel.showToast
+                             ),
+                show: $viewModel.showToast
+            )
             
-            accountSection
-        }
-        .onAppear {
-            viewModel.loadAuthProviders()
-            Task {
-                try await viewModel.loadCurrentUser()
+            if isDeletingAccount {
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: .blue))
+                    .scaleEffect(2)
+                    .opacity(isDeletingAccount ? 1 : 0)
             }
         }
-        .navigationTitle(NSLocalizedString("Settings", comment: ""))
-        .overlay(
-            overlayView:
-                ToastView(toast:
-                            Toast(
-                                title: viewModel.toastMessage,
-                                image: viewModel.toastImage),
-                          show: $viewModel.showToast
-                         ),
-            show: $viewModel.showToast
-        )
     }
 }
 
@@ -52,6 +64,7 @@ extension SettingsView {
             Button(NSLocalizedString("Update password", comment: "")) {
                 showingChangePassword = true
             }
+            .disabled(isDeletingAccount)
             .sheet(isPresented: $showingChangePassword) {
                 ChangePasswordView(showingChangePassword: $showingChangePassword, completion: { success in
                     if success {
@@ -65,6 +78,7 @@ extension SettingsView {
             Button(NSLocalizedString("Update email", comment: "")) {
                 showingChangeEmail = true
             }
+            .disabled(isDeletingAccount)
             .sheet(isPresented: $showingChangeEmail) {
                 ChangeEmailView(showingChangeEmail: $showingChangeEmail, completion: { success in
                     if success {
@@ -85,6 +99,7 @@ extension SettingsView {
             Button(NSLocalizedString("Update Username", comment: "")) {
                 showingChangeUserName = true
             }
+            .disabled(isDeletingAccount)
             .sheet(isPresented: $showingChangeUserName) {
                 ChangeUserNameView(showingChangeUserName: $showingChangeUserName, completion: { success in
                     if success {
@@ -111,19 +126,31 @@ extension SettingsView {
                     }
                 }
             }
+            .disabled(isDeletingAccount)
             
             Button(role: .destructive) {
-                Task {
-                    do {
-                        try viewModel.signOut()
-                        showSignInView = true
-                    } catch {
-                        print(error)
-                    }
-                }
+                showDeleteConfirmation = true
             } label: {
                 Text(NSLocalizedString("Delete account", comment: ""))
             }
+            .disabled(isDeletingAccount)
+            .alert(NSLocalizedString("Confirm delete", comment: ""), isPresented: $showDeleteConfirmation, actions: {
+                Button(NSLocalizedString("Delete", comment: ""), role: .destructive) {
+                    Task {
+                        isDeletingAccount = true
+                        do {
+                            try await viewModel.deleteAccount()
+                            showSignInView = true
+                        } catch {
+                            print(error)
+                        }
+                        isDeletingAccount = false
+                    }
+                }
+                Button(NSLocalizedString("Cancel", comment: ""), role: .cancel) {}
+            }, message: {
+                Text(NSLocalizedString("Are you sure you want to delete your account?", comment: ""))
+            })
         } header: {
             Text(NSLocalizedString("Account", comment: ""))
         }

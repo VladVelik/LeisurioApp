@@ -11,11 +11,19 @@ final class SignInEmailViewModel: ObservableObject {
     @Published var email = ""
     @Published var password = ""
     
-    func signUp() async throws {
+    func generalCheck() throws {
         guard !email.isEmpty, !password.isEmpty else {
             print("email or password not found")
-            return
+            throw SignInError.loginDetailsNil
         }
+        
+        if (password.count < 8) {
+            throw SignInError.shortPassword
+        }
+    }
+    
+    func signUp() async throws {
+        try generalCheck()
         
         let authDataResult = try await AuthenticationManager.shared.createUser(email: email, password: password)
         let user = DBUser(auth: authDataResult)
@@ -23,10 +31,7 @@ final class SignInEmailViewModel: ObservableObject {
     }
     
     func signIn() async throws {
-        guard !email.isEmpty, !password.isEmpty else {
-            print("email or password not found")
-            return
-        }
+        try generalCheck()
         
         try await AuthenticationManager.shared.signInUser(email: email, password: password)
     }
