@@ -8,23 +8,29 @@
 import SwiftUI
 
 struct RestView: View {
+    @ObservedObject var viewModel: MainViewModel
+    
     let sortedIndex: Int
     let rest: Rest
-    @ObservedObject var viewModel: MainViewModel
 
     var body: some View {
         VStack {
             HStack {
                 Text("\(sortedIndex + 1)").bold()
                 Spacer()
-                Text("\(viewModel.timeFormatter.string(from: rest.startDate)) - \(viewModel.timeFormatter.string(from: rest.endDate))").bold()
+                Text("\(viewModel.timeFormatter.string(from: rest.startDate))" +
+                     " - " +
+                     "\(viewModel.timeFormatter.string(from: rest.endDate))")
+                    .bold()
                 Image(systemName: viewModel.getHourglassSymbol(for: rest))
                     .resizable()
                     .scaledToFit()
                     .frame(height: 30)
             }
             Spacer()
-            Image(systemName: viewModel.getSymbolName(from: rest.restType) ?? "ellipsis.circle.fill")
+            Image(systemName:
+                    viewModel.getSymbolName(from: rest.restType) ?? "ellipsis.circle.fill"
+                )
                 .resizable()
                 .scaledToFit()
                 .frame(height: 80)

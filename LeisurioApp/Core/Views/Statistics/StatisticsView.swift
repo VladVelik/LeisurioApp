@@ -66,26 +66,46 @@ struct StatisticsView: View {
                     }
                     .id(UUID())
                 } else {
-                    statisticsTitleView(title: chartInfo[0].title, explanation: chartInfo[0].explanation, showExplanation: $showChartExplanation[0])
-                    
-                    Chart(viewModel.preparedData) { day in
-                        BarMark(
-                            x: .value("Day", day.label),
-                            y: .value("Minutes", day.restMinutes)
-                        )
+                    if viewModel.preparedData.map({ $0.restMinutes }).reduce(0, +) == 0 {
+                        Rectangle()
+                            .fill(.blue)
+                            .frame(height: 200)
+                            .overlay(
+                                VStack {
+                                    Image(systemName: "questionmark.circle")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(height: 80)
+                                    Text(NSLocalizedString("Add leisure to the selected period to see the statistics", comment: ""))
+                                        .multilineTextAlignment(.center)
+                                        .bold()
+                                }
+                                .foregroundColor(.white)
+                            )
+                            .cornerRadius(20)
+                            .padding()
+                    } else {
+                        statisticsTitleView(title: chartInfo[0].title, explanation: chartInfo[0].explanation, showExplanation: $showChartExplanation[0])
+                        
+                        Chart(viewModel.preparedData) { day in
+                            BarMark(
+                                x: .value("Day", day.label),
+                                y: .value("Minutes", day.restMinutes)
+                            )
+                        }
+                        .foregroundColor(.red)
+                        .padding()
+                        
+                        statisticsTitleView(title: chartInfo[1].title, explanation: chartInfo[1].explanation, showExplanation: $showChartExplanation[1])
+                        
+                        PieChart(rawData: viewModel.preparedData)
+                            .padding()
+                        
+                        statisticsTitleView(title: chartInfo[2].title, explanation: chartInfo[2].explanation, showExplanation: $showChartExplanation[2])
+                        
+                        PieChart(rawData: viewModel.typesData)
+                            .padding()
                     }
-                    .foregroundColor(.red)
-                    .padding()
-                    
-                    statisticsTitleView(title: chartInfo[1].title, explanation: chartInfo[1].explanation, showExplanation: $showChartExplanation[1])
-                    
-                    PieChart(rawData: viewModel.preparedData)
-                        .padding()
-                    
-                    statisticsTitleView(title: chartInfo[2].title, explanation: chartInfo[2].explanation, showExplanation: $showChartExplanation[2])
-                    
-                    PieChart(rawData: viewModel.typesData)
-                        .padding()
                 }
             }
             .onAppear {

@@ -22,12 +22,6 @@ struct ChangePasswordView: View {
     var body: some View {
         NavigationView {
             VStack {
-//                Text(NSLocalizedString("Password", comment: ""))
-//                    .lineLimit(2)
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .font(.title)
-//                    .bold()
-//                Text("")
                 TextFieldStyleView(title: NSLocalizedString("Old password", comment: ""), text: $oldPassword, isSecure: true)
                 TextFieldStyleView(title: NSLocalizedString("New password", comment: ""), text: $newPassword, isSecure: true)
                 TextFieldStyleView(title: NSLocalizedString("Confirm new password", comment: ""), text: $confirmPassword, isSecure: true)
@@ -49,7 +43,7 @@ struct ChangePasswordView: View {
                             } catch {
                                 completion(false)
                                 showError = true
-                                errorMessage = error.localizedDescription
+                                errorMessage = NSLocalizedString(error.localizedDescription, comment: "")
                             }
                         }
                     }

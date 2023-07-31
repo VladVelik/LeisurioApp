@@ -16,22 +16,20 @@ struct AuthenticationView: View {
     
     @State private var isSignIn = true
     
-    @State private var showErrorAlert = false
-    @State private var alertTitle = ""
-    @State private var alertMessage = ""
+    @State var alertItem: AlertItem?
     
     var body: some View {
         ZStack {
             VStack {
-                Text(isSignIn ? "Welcome back!" : "Welcome!")
-                    .font(.largeTitle)
+                Text(isSignIn ? NSLocalizedString("Welcome back!", comment: "") : NSLocalizedString("Welcome!", comment: ""))
+                    .font(.title)
                     .bold()
                     .foregroundColor(.black)
                     .padding()
                 NavigationLink {
                     SignInEmailView(showSignInView: $showSignInView, isSignIn: $isSignIn)
                 } label: {
-                    ImageButton(action: {}, imageName: "envelope", text: isSignIn ? "Sign In with Mail" : "Sign Up with Mail", isButton: false)
+                    ImageButton(action: {}, imageName: "envelope", text: isSignIn ? NSLocalizedString("Sign In with Email", comment: "") : NSLocalizedString("Sign Up with Email", comment: ""), isButton: false)
                 }
                 
                 ImageButton(action: {
@@ -39,32 +37,24 @@ struct AuthenticationView: View {
                         do {
                             try await viewModel.signWithGoogle(isSignIn: isSignIn)
                             showSignInView = false
-                        } catch {
-                            if let userError = error as? GoogleError {
-                                switch userError {
-                                case .accountAlreadyExists:
-                                    alertTitle = "Account Error"
-                                    alertMessage = "An account with this email already exists."
-                                case .noAccountExists:
-                                    alertTitle = "Account Error"
-                                    alertMessage = "No account exists with this email."
-                                }
-                                showErrorAlert = true
-                            }
+                        } catch let error as LocalizedError {
+                            alertItem = AlertItem(
+                                title: NSLocalizedString("Error", comment: ""),
+                                message: NSLocalizedString(error.localizedDescription, comment: ""))
                         }
                     }
-                }, imageName: "google", text: isSignIn ? "Sign In with Google" : "Sign Up with Google", systemImage: false)
+                }, imageName: "google", text: isSignIn ? NSLocalizedString("Sign In with Google", comment: "") : NSLocalizedString("Sign Up with Google", comment: ""), systemImage: false)
                 
                 
                 ImageButton(action: {
                     print("apple")
-                }, imageName: "applelogo", text: isSignIn ? "Sign In with Apple" : "Sign Up with Apple")
+                }, imageName: "applelogo", text: isSignIn ? NSLocalizedString("Sign In with Apple", comment: "") : NSLocalizedString("Sign Up with Apple", comment: ""))
                 
                 HStack {
                     Spacer()
-                    Text(isSignIn ? "Don't have an account?" : "Already have an account?")
+                    Text(isSignIn ? NSLocalizedString("Don't have an account?", comment: "") : NSLocalizedString("Already have an account?", comment: ""))
                         .bold()
-                    Button(isSignIn ? "Sign Up" : "Sign In") {
+                    Button(isSignIn ? NSLocalizedString("Sign Up", comment: "") : NSLocalizedString("Sign In", comment: "")) {
                         withAnimation(.easeInOut(duration: 0.1)) {
                             isSignIn.toggle()
                         }
@@ -77,8 +67,12 @@ struct AuthenticationView: View {
             }
             .padding()
             .frame(maxWidth: .infinity)
-            .alert(isPresented: $showErrorAlert) {
-                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            .alert(item: $alertItem) { alertItem in
+                Alert(
+                    title: Text(alertItem.title),
+                    message: Text(alertItem.message),
+                    dismissButton: .default(Text("OK"))
+                )
             }
             .background(
                 Image("background")

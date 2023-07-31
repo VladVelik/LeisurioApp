@@ -202,19 +202,6 @@ final class MainViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self.restTimers.append(contentsOf: [startTimer, endTimer])
             }
-
         }
-    }
-}
-
-struct CancellationToken {
-    private let onCancel: () -> Void
-    
-    init(_ onCancel: @escaping () -> Void) {
-        self.onCancel = onCancel
-    }
-    
-    func cancel() {
-        onCancel()
     }
 }

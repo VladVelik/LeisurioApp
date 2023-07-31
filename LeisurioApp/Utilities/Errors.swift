@@ -7,9 +7,18 @@
 
 import Foundation
 
-enum GoogleError: Error {
+enum GoogleError: LocalizedError {
     case accountAlreadyExists
     case noAccountExists
+    
+    var errorDescription: String? {
+        switch self {
+        case .accountAlreadyExists:
+            return "An account with this email already exists!"
+        case .noAccountExists:
+            return "No account exists with this email!"
+        }
+    }
 }
 
 enum SignInError: LocalizedError {

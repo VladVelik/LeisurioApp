@@ -11,7 +11,7 @@ struct TextFieldStyleView: View {
     var title: String
     @Binding var text: String
     var isSecure: Bool
-    var color = Color(.systemGray)
+    var color = Color(.systemGray6)
     
     var body: some View {
         VStack {

@@ -22,13 +22,13 @@ struct SignInEmailView: View {
     
     var body: some View {
         VStack {
-            Text(isSignIn ? "Sign in with Email" : "Sign up with Email")
-                .font(.largeTitle)
+            Text(isSignIn ? NSLocalizedString("Sign In ", comment: "") : NSLocalizedString("Sign Up ", comment: ""))
+                .font(.title)
                 .bold()
                 .foregroundColor(.black)
                 .padding()
-            TextFieldStyleView(title: "Email...", text: $viewModel.email, isSecure: false, color: .white)
-            TextFieldStyleView(title: "Password...", text: $viewModel.password, isSecure: true, color: .white)
+            TextFieldStyleView(title: "Email", text: $viewModel.email, isSecure: false, color: .white)
+            TextFieldStyleView(title: NSLocalizedString("Password", comment: ""), text: $viewModel.password, isSecure: true, color: .white)
                 
             Button {
                 Task {
@@ -40,11 +40,11 @@ struct SignInEmailView: View {
                         }
                         showSignInView = false
                     } catch let error as LocalizedError {
-                        alertItem = AlertItem(title: "Error", message: error.localizedDescription)
+                        alertItem = AlertItem(title: NSLocalizedString("Error", comment: ""), message: NSLocalizedString(error.localizedDescription, comment: ""))
                     }
                 }
             } label: {
-                Text(isSignIn ? "Sign in" : "Sign up")
+                Text(isSignIn ? NSLocalizedString("Sign In", comment: "") : NSLocalizedString("Sign Up", comment: ""))
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding()
@@ -53,7 +53,11 @@ struct SignInEmailView: View {
                     .cornerRadius(15)
             }
             .alert(item: $alertItem) { alertItem in
-                Alert(title: Text(alertItem.title), message: Text(alertItem.message), dismissButton: .default(Text("OK")))
+                Alert(
+                    title: Text(alertItem.title),
+                    message: Text(alertItem.message),
+                    dismissButton: .default(Text("OK"))
+                )
             }
             Spacer()
         }
@@ -66,5 +70,6 @@ struct SignInEmailView: View {
                 .offset(x: -UIScreen.main.bounds.width / 6)
                 .opacity(0.3)
         )
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }

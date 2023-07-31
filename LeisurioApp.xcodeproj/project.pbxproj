@@ -68,6 +68,7 @@
 		6F6A8AB62A6EB5C600BC1D63 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6F6A8AB82A6EB5C600BC1D63 /* Localizable.strings */; };
 		6F6A8ABB2A76A27200BC1D63 /* LogInButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6A8ABA2A76A27200BC1D63 /* LogInButtonView.swift */; };
 		6F6A8ABD2A76AE5600BC1D63 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6A8ABC2A76AE5600BC1D63 /* Errors.swift */; };
+		6F6A8ABF2A77D8EC00BC1D63 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6A8ABE2A77D8EC00BC1D63 /* CancellationToken.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,6 +126,7 @@
 		6F6A8AB92A6EB5CB00BC1D63 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6F6A8ABA2A76A27200BC1D63 /* LogInButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInButtonView.swift; sourceTree = "<group>"; };
 		6F6A8ABC2A76AE5600BC1D63 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		6F6A8ABE2A77D8EC00BC1D63 /* CancellationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationToken.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -358,6 +360,7 @@
 				240429632A1F9B750019FBB5 /* MainView.swift */,
 				242677232A4C80B700A4DE80 /* RestView.swift */,
 				240429782A2015310019FBB5 /* MainViewModel.swift */,
+				6F6A8ABE2A77D8EC00BC1D63 /* CancellationToken.swift */,
 			);
 			path = MainScreen;
 			sourceTree = "<group>";
@@ -522,6 +525,7 @@
 				6F63D5782A6ABF9700786FC8 /* ToastView.swift in Sources */,
 				247C502C2A4C85E40023A058 /* CreateRestModel.swift in Sources */,
 				240429662A1F9C8C0019FBB5 /* ScreenView.swift in Sources */,
+				6F6A8ABF2A77D8EC00BC1D63 /* CancellationToken.swift in Sources */,
 				240429792A2015310019FBB5 /* MainViewModel.swift in Sources */,
 				247C502A2A4C82990023A058 /* CreateRestViewModel.swift in Sources */,
 				6F63D5662A5EBFB800786FC8 /* NewsModel.swift in Sources */,

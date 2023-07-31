@@ -175,9 +175,15 @@ final class RestDetailViewModel: ObservableObject {
     func isPastEvent() -> Bool {
         let now = Date()
         if rest.endDate < now {
+            removeNotificationPreference()
             return true
         } else {
             return false
         }
     }
+    
+    func removeNotificationPreference() {
+        UserDefaults.standard.removeObject(forKey: "notificationOption_\(rest.restId)")
+    }
+
 }
