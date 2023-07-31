@@ -47,7 +47,16 @@ struct AuthenticationView: View {
                 
                 
                 ImageButton(action: {
-                    print("apple")
+                    Task {
+                        do {
+                            try await viewModel.signWithApple(isSignIn: isSignIn)
+                            showSignInView = false
+                        } catch let error as LocalizedError {
+                            alertItem = AlertItem(
+                                title: NSLocalizedString("Error", comment: ""),
+                                message: NSLocalizedString(error.localizedDescription, comment: ""))
+                        }
+                    }
                 }, imageName: "applelogo", text: isSignIn ? NSLocalizedString("Sign In with Apple", comment: "") : NSLocalizedString("Sign Up with Apple", comment: ""))
                 
                 HStack {

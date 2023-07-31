@@ -37,6 +37,9 @@ struct ProfileView: View {
                             .imageScale(.large)
                         if let email = user.email {
                             Text(email)
+                                .font(.body)
+                                .minimumScaleFactor(0.4)
+                                .lineLimit(1)
                         }
                     }
                 }
@@ -71,7 +74,6 @@ struct ProfileView: View {
                         }
                     }
                 }
-
             }
             .padding()
             
@@ -129,7 +131,17 @@ struct ProfileView: View {
                 }
                 .padding()
             )
-
     }
     
+    private func calculateFontSize(for text: String, in width: CGFloat) -> CGFloat {
+        let characterWidth: CGFloat = 7.0
+        let charactersFit = width / characterWidth
+        
+        if CGFloat(text.count) > charactersFit {
+            let desiredFontSize = 12.0 * charactersFit / CGFloat(text.count)
+            return max(desiredFontSize, 8.0)
+        } else {
+            return 12.0
+        }
+    }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum GoogleError: LocalizedError {
+enum GoogleAppleError: LocalizedError {
     case accountAlreadyExists
     case noAccountExists
     
