@@ -19,12 +19,28 @@ final class ProfileViewModel: ObservableObject {
     @Published var toastMessage: String = ""
     @Published var toastImage: String = ""
     
+    @Published var nearestRest: Rest?
+    @Published var todayRestDuration: TimeInterval? = 0
+    
     func loadCurrentUser() async throws {
-        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
-        let userInfo = try await UserManager.shared.getUser(userId: authDataResult.uid)
-        DispatchQueue.main.async {
-            self.user = userInfo
-            self.imageUrl = userInfo.photoUrl
+        do {
+            let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+            let userInfo = try await UserManager.shared.getUser(userId: authDataResult.uid)
+            
+            DispatchQueue.main.async {
+                self.user = userInfo
+                self.imageUrl = userInfo.photoUrl
+            }
+            
+            let nearRest = try? await getNearestRest(userId: userInfo.userId)
+            let todayDuration = try? await getTotalRestDuration(userId: userInfo.userId, date: Date())
+            
+            DispatchQueue.main.async {
+                self.nearestRest = nearRest
+                self.todayRestDuration = todayDuration
+            }
+        } catch {
+            print("Failed to load current user: \(error)")
         }
     }
     
@@ -78,4 +94,29 @@ final class ProfileViewModel: ObservableObject {
         }
     }
 
+}
+
+extension ProfileViewModel {
+    func getNearestRest(userId: String) async throws -> Rest? {
+        do {
+            let allRests = try await UserManager.shared.getAllRestsForUser(userId: userId)
+            
+            let futureRests = allRests.filter { $0.startDate > Date() }
+            return futureRests.min(by: { $0.startDate < $1.startDate })
+        } catch {
+            print("Failed to get nearest rest: \(error)")
+            return nil
+        }
+    }
+    
+    func getTotalRestDuration(userId: String, date: Date) async throws -> TimeInterval {
+        do {
+            let restsOnDate = try await UserManager.shared.getRestsForUserOnDate(userId: userId, date: date)
+            let totalDuration = restsOnDate.reduce(0) { $0 + $1.endDate.timeIntervalSince($1.startDate) }
+            return totalDuration
+        } catch {
+            print("Failed to get nearest rest: \(error)")
+            return 0
+        }
+    }
 }

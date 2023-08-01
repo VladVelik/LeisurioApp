@@ -51,7 +51,14 @@ struct MainView: View {
         .onAppear {
             if isFirstLoad {
                 Task {
-                    try await viewModel.updateData()
+                    viewModel.updateData() { result in
+                        switch result {
+                        case .success():
+                            print("Successfully deleted rest.")
+                        case .failure(let error):
+                            print("Failed to delete rest: \(error)")
+                        }
+                    }
                     isFirstLoad = false
                 }
             }
@@ -77,12 +84,11 @@ struct MainView: View {
             }) {
                 Image(systemName: "arrow.left")
                     .scaleEffect(1.5)
-                    
             }
-            
+
             Text(" \(viewModel.selectedDate, formatter: viewModel.dateFormatter) ")
                 .font(.largeTitle)
-            
+
             Button(action: {
                 viewModel.changeDate(by: 1)
             }) {
@@ -151,8 +157,16 @@ extension MainView {
             .id(rest.restId)
         }
         .onDelete { sortedIndex in
-            viewModel.deleteRest(at: sortedIndex)
+            viewModel.deleteRest(at: sortedIndex) { result in
+                switch result {
+                case .success():
+                    print("Successfully deleted rest.")
+                case .failure(let error):
+                    print("Failed to delete rest: \(error)")
+                }
+            }
         }
+
     }
 
     private func emptyRestListView() -> some View {

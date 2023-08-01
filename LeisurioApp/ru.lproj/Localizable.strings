@@ -125,3 +125,7 @@
 "The user must be re-authenticated to perform this operation." = "Для завершения этой операции требуется повторная авторизация";
 "No events today. Add first one?" = "Сегодня событий нет. Добавить?";
 "Add leisure to the selected period to see the statistics" = "Добавьте отдых в выбранный период, чтобы увидеть статистику";
+"Total rest time today" = "Запланировано сегодня";
+"Next leisure" = "Следующее событие";
+"No upcoming leisures" = "Событий нет";
+"minutes" = "минут";

@@ -14,6 +14,6 @@ struct CreateRestModel {
     var selectedCategory: String = ""
     
     var isIncorrect: Bool {
-        endTime < startTime || restNote.isEmpty || restNote.count > 15 || selectedCategory == ""
+        endTime < startTime || restNote.isEmpty || restNote.count > 20 || selectedCategory == ""
     }
 }

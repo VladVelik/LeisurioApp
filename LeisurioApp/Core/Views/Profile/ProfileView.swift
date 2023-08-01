@@ -76,6 +76,7 @@ struct ProfileView: View {
                 }
             }
             .padding()
+            .padding(.bottom, 20)
             
             HStack {
                 drawRoundedRectangleView(
@@ -86,6 +87,20 @@ struct ProfileView: View {
                 drawRoundedRectangleView(
                     title: NSLocalizedString("Number of leisures", comment: ""),
                     text: "\(viewModel.user?.rests.count ?? 0)"
+                )
+            }
+            .padding(.horizontal)
+            
+            HStack {
+                drawRoundedRectangleView(
+                    title: NSLocalizedString("Next leisure", comment: ""),
+                    text: viewModel.nearestRest?.keyword
+                    ?? NSLocalizedString("No upcoming leisures", comment: "")
+                )
+
+                drawRoundedRectangleView(
+                    title: NSLocalizedString("Total rest time today", comment: ""),
+                    text: "\(Int((viewModel.todayRestDuration ?? 0) / 60)) \(NSLocalizedString("minutes", comment: ""))"
                 )
             }
             .padding(.horizontal)
@@ -103,6 +118,7 @@ struct ProfileView: View {
             show: $viewModel.showToast
         )
         .task {
+            print("fetch")
             try? await viewModel.loadCurrentUser()
         }
         .onChange(of: selectedItem, perform: { newValue in
@@ -128,20 +144,24 @@ struct ProfileView: View {
                         .padding(.bottom, 10)
                     Text(text)
                         .multilineTextAlignment(.center)
+                        .font(.body)
+                        .minimumScaleFactor(scaleFactor(for: text))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(2)
                 }
                 .padding()
             )
     }
     
-    private func calculateFontSize(for text: String, in width: CGFloat) -> CGFloat {
-        let characterWidth: CGFloat = 7.0
-        let charactersFit = width / characterWidth
+    private func scaleFactor(for text: String) -> CGFloat {
+        let length = text.count
         
-        if CGFloat(text.count) > charactersFit {
-            let desiredFontSize = 12.0 * charactersFit / CGFloat(text.count)
-            return max(desiredFontSize, 8.0)
+        if length <= 12 {
+            return 1.0
+        } else if length <= 15 {
+            return 0.9
         } else {
-            return 12.0
+            return 0.7
         }
     }
 }

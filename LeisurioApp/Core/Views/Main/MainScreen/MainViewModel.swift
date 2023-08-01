@@ -14,9 +14,18 @@ final class MainViewModel: ObservableObject {
         didSet {
             cancellationToken?.cancel()
             let task = Task {
-                try await getRestsForSelectedDate(userId: userId)
+                getRestsForSelectedDate(userId: userId) { result in
+                    switch result {
+                    case .success(_):
+                        print("Successfully got rests for selected date.")
+                        // Обработайте успешный результат здесь
+                    case .failure(let error):
+                        print("Failed to get rests for selected date: \(error)")
+                        // Обработайте ошибку здесь
+                    }
+                }
             }
-            
+
             cancellationToken = CancellationToken {
                 task.cancel()
             }
@@ -58,14 +67,19 @@ final class MainViewModel: ObservableObject {
     }()
     
     func fetchUserUid() async throws -> String {
-        let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
-        userId = authDataResult.uid
-        return userId
+        do {
+            let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
+            userId = authDataResult.uid
+            return userId
+        } catch {
+            throw error
+        }
     }
     
     func changeDate(by value: Int) {
         selectedDate = Calendar.current.date(byAdding: .day, value: value, to: selectedDate) ?? selectedDate
     }
+
     
     func toggleDatePicker() {
         withAnimation {
@@ -96,33 +110,56 @@ final class MainViewModel: ObservableObject {
         categories.first(where: { $0.name == category })?.imageName
     }
     
-    func updateData() async throws {
-        let id = try await fetchUserUid()
-        try await getRestsForSelectedDate(userId: id)
+    func updateData(completion: @escaping (Result<Void, Error>) -> Void) {
+        Task {
+            do {
+                let id = try await fetchUserUid()
+                getRestsForSelectedDate(userId: id) { result in
+                    switch result {
+                    case .success(_):
+                        completion(.success(()))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
     
-    func getRestsForSelectedDate(userId: String) async throws {
+    func getRestsForSelectedDate(userId: String, completion: @escaping (Result<[Rest], Error>) -> Void) {
         DispatchQueue.main.async {
             self.isLoading = true
         }
-        do {
-            let rests = try await UserManager.shared.getRestsForUserOnDate(userId: userId, date: selectedDate)
-            if Task.isCancelled { return }
-            
-            self.clearRestTimers()
-            self.setRestTimers(for: rests)
-            
-            DispatchQueue.main.async {
-                self.restsForSelectedDate = rests
-                self.isLoading = false
-            }
-        } catch {
-            print("Failed to get rests for selected date: \(error)")
-            DispatchQueue.main.async {
-                self.isLoading = false
+        
+        let task = Task {
+            do {
+                let rests = try await UserManager.shared.getRestsForUserOnDate(userId: userId, date: selectedDate)
+                if Task.isCancelled { return }
+
+                self.clearRestTimers()
+                self.setRestTimers(for: rests)
+
+                DispatchQueue.main.async {
+                    self.restsForSelectedDate = rests
+                    self.isLoading = false
+                }
+                completion(.success(rests))
+            } catch {
+                print("Failed to get rests for selected date: \(error)")
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
+                completion(.failure(error))
             }
         }
+        
+        cancellationToken = CancellationToken {
+            task.cancel()
+        }
     }
+
     
     func updateRest(_ rest: Rest) async {
         DispatchQueue.main.async {
@@ -146,11 +183,11 @@ final class MainViewModel: ObservableObject {
         .map { (index: $0.offset, rest: $0.element) }
     }
 
-    func deleteRest(at offsets: IndexSet) {
+    func deleteRest(at offsets: IndexSet, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let sortedIndex = offsets.first else { return }
         let (originalIndex, _) = sortedRestsForSelectedDate[sortedIndex]
         let restToDelete = restsForSelectedDate[originalIndex]
-        
+
         Task {
             do {
                 try await RestManager.shared.deleteRest(restId: restToDelete.restId)
@@ -158,8 +195,10 @@ final class MainViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.restsForSelectedDate.remove(at: originalIndex)
                 }
+                completion(.success(()))
             } catch {
                 print("Failed to delete rest: \(error)")
+                completion(.failure(error))
             }
         }
     }
