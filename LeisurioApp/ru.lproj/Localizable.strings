@@ -32,7 +32,7 @@
 "News" = "Новости";
 "Profile" = "Профиль";
 "Notifications" = "Уведомления";
-"Recommendations" = "Рекоммендации";
+"Recommendations" = "Рекомендации";
 "  loading notifications..." = "  загрузка уведомлений...";
 "No notifications yet" = "Уведомлений пока нет";
 "No rest" = "Нет отдыха";
@@ -47,7 +47,7 @@
 "You have been resting for %d days in a row. Good job!" = "Вы отдыхаете уже %d дней подряд. Отличная работа!";
 "Mood boost" = "Повышение настроения";
 "Your mood improved today! Great work!" = "Ваше настроение за день улучшилось! Отличная работа!";
-"No recommendations yet" = "Рекоммендаций пока нет";
+"No recommendations yet" = "Рекомендаций пока нет";
 "  loading recommendations..." = "  загрузка рекомендаций...";
 "yet" = "пока";
 "Registration date" = "Дата регистрации";
