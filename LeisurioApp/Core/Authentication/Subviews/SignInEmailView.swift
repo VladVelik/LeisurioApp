@@ -40,7 +40,11 @@ struct SignInEmailView: View {
                         }
                         showSignInView = false
                     } catch let error as LocalizedError {
-                        alertItem = AlertItem(title: NSLocalizedString("Error", comment: ""), message: NSLocalizedString(error.localizedDescription, comment: ""))
+                        var title = "Error"
+                        if ((error.errorDescription?.contains("verification")) == true) {
+                            title = "Confirmation"
+                        }
+                        alertItem = AlertItem(title: NSLocalizedString(title, comment: ""), message: NSLocalizedString(error.localizedDescription, comment: ""))
                     }
                 }
             } label: {

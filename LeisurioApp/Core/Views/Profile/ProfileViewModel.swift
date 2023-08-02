@@ -15,6 +15,8 @@ final class ProfileViewModel: ObservableObject {
     @Published var isImagePickerPresented = false
     @Published var isLoadingImage = false
     
+    @Published var selectedItem: PhotosPickerItem? = nil
+    
     @Published var showToast: Bool = false
     @Published var toastMessage: String = ""
     @Published var toastImage: String = ""

@@ -78,8 +78,17 @@ extension AuthenticationManager {
     @discardableResult
     func createUser(email: String, password: String) async throws -> AuthDataResultModel {
         do {
+            let deviceLanguage = Locale.current.language.languageCode?.identifier
+            Auth.auth().languageCode = deviceLanguage == "ru" ? "ru" : "en"
+            
             let authData = try await Auth.auth().createUser(withEmail: email, password: password)
-            return AuthDataResultModel(authData.user)
+            let user = authData.user
+            
+            try await user.sendEmailVerification()
+            
+            try AuthenticationManager.shared.signOut()
+            
+            return AuthDataResultModel(user)
         } catch {
             let nsError = error as NSError
             switch nsError.code {
@@ -97,6 +106,12 @@ extension AuthenticationManager {
     func signInUser(email: String, password: String) async throws -> AuthDataResultModel {
         do {
             let authData = try await Auth.auth().signIn(withEmail: email, password: password)
+            
+            if (Auth.auth().currentUser?.isEmailVerified == false) {
+                try AuthenticationManager.shared.signOut()
+                throw AuthErrorCode(.appNotVerified)
+            }
+            
             return AuthDataResultModel(authData.user)
         } catch {
             let nsError = error as NSError
@@ -107,6 +122,8 @@ extension AuthenticationManager {
                 throw SignInError.wrongPassword
             case AuthErrorCode.invalidEmail.rawValue:
                 throw SignInError.badEmail
+            case AuthErrorCode.appNotVerified.rawValue:
+                throw SignInError.notVerified
             default:
                 throw SignInError.unknownError
             }

@@ -129,3 +129,6 @@
 "Next leisure" = "Следующее событие";
 "No upcoming leisures" = "Событий нет";
 "minutes" = "минут";
+"No internet connection" = "Нет подключения к интернету";
+"An email has been sent to your registered email address with a verification link to confirm your account." = "Вам на почту было отправлено письмо с ссылкой для подтверждения аккаунта";
+"Confirmation" = "Подтверждение";

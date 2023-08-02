@@ -19,6 +19,8 @@ struct SettingsView: View {
     @State private var showDeleteConfirmation = false
     @State private var isDeletingAccount = false
     
+    @State var alertItem: AlertItem?
+    
     var body: some View {
         ZStack {
             List {
@@ -55,6 +57,13 @@ struct SettingsView: View {
                     .opacity(isDeletingAccount ? 1 : 0)
             }
         }
+        .alert(item: $alertItem) { alertItem in
+            Alert(
+                title: Text(alertItem.title),
+                message: Text(alertItem.message),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
 }
 
@@ -62,7 +71,14 @@ extension SettingsView {
     private var emailSection: some View {
         Section {
             Button(NSLocalizedString("Update password", comment: "")) {
-                showingChangePassword = true
+                if NetworkMonitor.shared.isConnected {
+                    showingChangePassword = true
+                } else {
+                    alertItem = AlertItem(
+                        title: NSLocalizedString("Error", comment: ""),
+                        message: NSLocalizedString("No internet connection", comment: ""))
+                }
+                
             }
             .disabled(isDeletingAccount)
             .sheet(isPresented: $showingChangePassword) {
@@ -76,7 +92,13 @@ extension SettingsView {
             }
             
             Button(NSLocalizedString("Update email", comment: "")) {
-                showingChangeEmail = true
+                if NetworkMonitor.shared.isConnected {
+                    showingChangeEmail = true
+                } else {
+                    alertItem = AlertItem(
+                        title: NSLocalizedString("Error", comment: ""),
+                        message: NSLocalizedString("No internet connection", comment: ""))
+                }
             }
             .disabled(isDeletingAccount)
             .sheet(isPresented: $showingChangeEmail) {
@@ -97,7 +119,13 @@ extension SettingsView {
     var userNameSection: some View {
         Section {
             Button(NSLocalizedString("Update Username", comment: "")) {
-                showingChangeUserName = true
+                if NetworkMonitor.shared.isConnected {
+                    showingChangeUserName = true
+                } else {
+                    alertItem = AlertItem(
+                        title: NSLocalizedString("Error", comment: ""),
+                        message: NSLocalizedString("No internet connection", comment: ""))
+                }
             }
             .disabled(isDeletingAccount)
             .sheet(isPresented: $showingChangeUserName) {
@@ -129,7 +157,14 @@ extension SettingsView {
             .disabled(isDeletingAccount)
             
             Button(role: .destructive) {
-                showDeleteConfirmation = true
+                if NetworkMonitor.shared.isConnected {
+                    showDeleteConfirmation = true
+                } else {
+                    alertItem = AlertItem(
+                        title: NSLocalizedString("Error", comment: ""),
+                        message: NSLocalizedString("No internet connection", comment: ""))
+                }
+                
             } label: {
                 Text(NSLocalizedString("Delete account", comment: ""))
             }

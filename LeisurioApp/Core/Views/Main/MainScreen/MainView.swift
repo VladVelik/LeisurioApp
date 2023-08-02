@@ -11,6 +11,8 @@ struct MainView: View {
     @ObservedObject private var viewModel = MainViewModel()
     @State private var isFirstLoad = true
     
+    @State var alertItem: AlertItem?
+    
     var body: some View {
         VStack {
             ZStack {
@@ -63,11 +65,24 @@ struct MainView: View {
                 }
             }
         }
+        .alert(item: $alertItem) { alertItem in
+            Alert(
+                title: Text(alertItem.title),
+                message: Text(alertItem.message),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
     
     private func datePickerToggleView() -> some View {
         Button(action: {
-            viewModel.toggleDatePicker()
+            if NetworkMonitor.shared.isConnected {
+                viewModel.toggleDatePicker()
+            } else {
+                alertItem = AlertItem(
+                    title: NSLocalizedString("Error", comment: ""),
+                    message: NSLocalizedString("No internet connection", comment: ""))
+            }
         }) {
             Text(
                 viewModel.isDatePickerShown
@@ -80,7 +95,13 @@ struct MainView: View {
     private func dateChangeView() -> some View {
         HStack {
             Button(action: {
-                viewModel.changeDate(by: -1)
+                if NetworkMonitor.shared.isConnected {
+                    viewModel.changeDate(by: -1)
+                } else {
+                    alertItem = AlertItem(
+                        title: NSLocalizedString("Error", comment: ""),
+                        message: NSLocalizedString("No internet connection", comment: ""))
+                }
             }) {
                 Image(systemName: "arrow.left")
                     .scaleEffect(1.5)
@@ -90,7 +111,13 @@ struct MainView: View {
                 .font(.largeTitle)
 
             Button(action: {
-                viewModel.changeDate(by: 1)
+                if NetworkMonitor.shared.isConnected {
+                    viewModel.changeDate(by: 1)
+                } else {
+                    alertItem = AlertItem(
+                        title: NSLocalizedString("Error", comment: ""),
+                        message: NSLocalizedString("No internet connection", comment: ""))
+                }
             }) {
                 Image(systemName: "arrow.right")
                     .scaleEffect(1.5)
@@ -100,8 +127,14 @@ struct MainView: View {
     
     private func addLeisureButton() -> some View {
         Button(NSLocalizedString("Add leisure", comment: "")) {
-            viewModel.toggleRestView()
-            viewModel.closeDatePicker()
+            if NetworkMonitor.shared.isConnected {
+                viewModel.toggleRestView()
+                viewModel.closeDatePicker()
+            } else {
+                alertItem = AlertItem(
+                    title: NSLocalizedString("Error", comment: ""),
+                    message: NSLocalizedString("No internet connection", comment: ""))
+            }
         }
     }
 }
@@ -157,13 +190,19 @@ extension MainView {
             .id(rest.restId)
         }
         .onDelete { sortedIndex in
-            viewModel.deleteRest(at: sortedIndex) { result in
-                switch result {
-                case .success():
-                    print("Successfully deleted rest.")
-                case .failure(let error):
-                    print("Failed to delete rest: \(error)")
+            if NetworkMonitor.shared.isConnected {
+                viewModel.deleteRest(at: sortedIndex) { result in
+                    switch result {
+                    case .success():
+                        print("Successfully deleted rest.")
+                    case .failure(let error):
+                        print("Failed to delete rest: \(error)")
+                    }
                 }
+            } else {
+                alertItem = AlertItem(
+                    title: NSLocalizedString("Error", comment: ""),
+                    message: NSLocalizedString("No internet connection", comment: ""))
             }
         }
 
@@ -171,8 +210,14 @@ extension MainView {
 
     private func emptyRestListView() -> some View {
         Button(action: {
-            viewModel.toggleRestView()
-            viewModel.closeDatePicker()
+            if NetworkMonitor.shared.isConnected {
+                viewModel.toggleRestView()
+                viewModel.closeDatePicker()
+            } else {
+                alertItem = AlertItem(
+                    title: NSLocalizedString("Error", comment: ""),
+                    message: NSLocalizedString("No internet connection", comment: ""))
+            }
         }) {
             HStack {
                 Spacer()

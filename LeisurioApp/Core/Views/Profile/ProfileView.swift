@@ -12,8 +12,6 @@ struct ProfileView: View {
     @ObservedObject private var viewModel = ProfileViewModel()
     @Binding var showSignInView: Bool
     
-    @State var selectedItem: PhotosPickerItem? = nil
-    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -66,8 +64,8 @@ struct ProfileView: View {
                         defaultImage
                     }
                     
-                    if !viewModel.isLoadingImage {
-                        PhotosPicker(selection: $selectedItem, matching: .images, photoLibrary: .shared()) {
+                    if !viewModel.isLoadingImage && NetworkMonitor.shared.isConnected {
+                        PhotosPicker(selection: $viewModel.selectedItem, matching: .images, photoLibrary: .shared()) {
                             Rectangle()
                                 .frame(width: 100, height: 100)
                                 .opacity(0.0)
@@ -121,8 +119,10 @@ struct ProfileView: View {
             print("fetch")
             try? await viewModel.loadCurrentUser()
         }
-        .onChange(of: selectedItem, perform: { newValue in
-            viewModel.imageChanging(newValue: newValue)
+        .onChange(of: viewModel.selectedItem, perform: { newValue in
+            if NetworkMonitor.shared.isConnected {
+                viewModel.imageChanging(newValue: newValue)
+            }
         })
     }
     

@@ -27,6 +27,7 @@ enum SignInError: LocalizedError {
     case wrongPassword
     case unknownError
     case badEmail
+    case notVerified
     case shortPassword
 
     var errorDescription: String? {
@@ -43,6 +44,8 @@ enum SignInError: LocalizedError {
             return "Invalid Email address!"
         case .shortPassword:
             return "The password should be at least 8 characters!"
+        case .notVerified:
+            return "An email has been sent to your registered email address with a verification link to confirm your account."
         }
     }
 }
@@ -52,7 +55,7 @@ enum SignUpError: LocalizedError {
     case invalidEmail
     case shortPassword
     case unknownError
-
+    
     var errorDescription: String? {
         switch self {
         case .emailAlreadyInUse:

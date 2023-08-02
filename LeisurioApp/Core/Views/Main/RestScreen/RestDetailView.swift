@@ -11,6 +11,8 @@ struct RestDetailView: View {
     @StateObject var mainViewModel: MainViewModel
     @StateObject var restDetailViewModel: RestDetailViewModel
 
+    @State var alertItem: AlertItem?
+    
     private var symbolName: String {
         restDetailViewModel.getHourglassSymbol(for: restDetailViewModel.rest)
     }
@@ -90,15 +92,21 @@ struct RestDetailView: View {
                     moodSelectionView(for: NSLocalizedString("Rate the leisure:", comment: ""), mood: $restDetailViewModel.finalRestMood)
                     
                     Button(action: {
-                        Task {
-                            if let updatedRest = await restDetailViewModel.updateRest(
-                                rest: restDetailViewModel.rest,
-                                preRestMood: restDetailViewModel.preRestMood,
-                                postRestMood: restDetailViewModel.postRestMood,
-                                finalRestMood: restDetailViewModel.finalRestMood
-                            ) {
-                                await mainViewModel.updateRest(updatedRest)
+                        if NetworkMonitor.shared.isConnected {
+                            Task {
+                                if let updatedRest = await restDetailViewModel.updateRest(
+                                    rest: restDetailViewModel.rest,
+                                    preRestMood: restDetailViewModel.preRestMood,
+                                    postRestMood: restDetailViewModel.postRestMood,
+                                    finalRestMood: restDetailViewModel.finalRestMood
+                                ) {
+                                    await mainViewModel.updateRest(updatedRest)
+                                }
                             }
+                        } else {
+                            alertItem = AlertItem(
+                                title: NSLocalizedString("Error", comment: ""),
+                                message: NSLocalizedString("No internet connection", comment: ""))
                         }
                     }) {
                         Text(NSLocalizedString("Save", comment: ""))
@@ -112,6 +120,13 @@ struct RestDetailView: View {
                 }
             }
             .padding()
+            .alert(item: $alertItem) { alertItem in
+                Alert(
+                    title: Text(alertItem.title),
+                    message: Text(alertItem.message),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
             .navigationBarTitle(NSLocalizedString("Leisure information", comment: ""), displayMode: .inline)
             .navigationBarItems(trailing:
                                     Group {

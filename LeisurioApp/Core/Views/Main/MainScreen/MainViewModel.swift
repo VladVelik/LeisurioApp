@@ -40,7 +40,7 @@ final class MainViewModel: ObservableObject {
     @Published var showToast: Bool = false
     @Published var toastMessage: String = ""
     @Published var toastImage: String = ""
-   
+    
     let categories: [(name: String, imageName: String)] = [
         ("Игры", "gamecontroller.fill"),
         ("Спорт", "sportscourt.fill"),

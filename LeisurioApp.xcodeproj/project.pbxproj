@@ -70,6 +70,7 @@
 		6F6A8ABD2A76AE5600BC1D63 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6A8ABC2A76AE5600BC1D63 /* Errors.swift */; };
 		6F6A8ABF2A77D8EC00BC1D63 /* CancellationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6A8ABE2A77D8EC00BC1D63 /* CancellationToken.swift */; };
 		6F6A8AC22A77F4F600BC1D63 /* SignInAppleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6A8AC12A77F4F600BC1D63 /* SignInAppleHelper.swift */; };
+		6F6A8AC42A7943AA00BC1D63 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6A8AC32A7943AA00BC1D63 /* NetworkMonitor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -130,6 +131,7 @@
 		6F6A8ABE2A77D8EC00BC1D63 /* CancellationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellationToken.swift; sourceTree = "<group>"; };
 		6F6A8AC02A77F16800BC1D63 /* LeisurioApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LeisurioApp.entitlements; sourceTree = "<group>"; };
 		6F6A8AC12A77F4F600BC1D63 /* SignInAppleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInAppleHelper.swift; sourceTree = "<group>"; };
+		6F6A8AC32A7943AA00BC1D63 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +188,7 @@
 				240428E92A13991C0019FBB5 /* Assets.xcassets */,
 				240428EB2A13991C0019FBB5 /* Preview Content */,
 				6F6A8AB82A6EB5C600BC1D63 /* Localizable.strings */,
+				6F6A8AC32A7943AA00BC1D63 /* NetworkMonitor.swift */,
 			);
 			path = LeisurioApp;
 			sourceTree = "<group>";
@@ -535,6 +538,7 @@
 				240429792A2015310019FBB5 /* MainViewModel.swift in Sources */,
 				247C502A2A4C82990023A058 /* CreateRestViewModel.swift in Sources */,
 				6F63D5662A5EBFB800786FC8 /* NewsModel.swift in Sources */,
+				6F6A8AC42A7943AA00BC1D63 /* NetworkMonitor.swift in Sources */,
 				2404297F2A20D2A20019FBB5 /* RestModel.swift in Sources */,
 				240429012A13F8650019FBB5 /* AuthenticationView.swift in Sources */,
 				240429052A13F90E0019FBB5 /* AuthenticationManager.swift in Sources */,

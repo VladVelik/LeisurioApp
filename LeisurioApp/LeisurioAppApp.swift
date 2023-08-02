@@ -24,6 +24,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         FirebaseApp.configure()
         NotificationManager.shared.requestNotificationPermission()
+        NetworkMonitor.shared.startMonitoring()
         return true
     }
 }
