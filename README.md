@@ -10,3 +10,5 @@ Leisurio - Your Ideal Activity and Leisure Planner!
   <img src="4.png" width="150" />
   <img src="5.png" width="150" />
 </p>
+
+> Note that the app algorithms may have issues, and this is still WIP.
